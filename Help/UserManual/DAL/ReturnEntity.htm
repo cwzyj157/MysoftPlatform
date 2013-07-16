@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>从数据库中获取数据实体</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+<p>新的数据访问层可以支持从数据库中获取数据实体，假设我们有这样一张表：</p>
+
+
+<p><img src="../_res/Images/dal/Table_cb_AddDevelopCost.png" />
+</p>
+
+<p>我们可以使用代码工具为它生成数据实体类型：
+</p>
+
+<p><img src="../_res/Images/dal/Table_cb_AddDevelopCost2.png" />
+</p>
+
+
+
+<p>用下面的方法可以获取单个对象：
+</p>
+
+
+<pre class="code">
+
+<span style="color:#2b91af">CbAddDevelopCost </span>cost <span style="color:red">= </span><span style="color:#2b91af">CPQuery</span><span style="color:red">.</span>From(<span style="color:#a31515">"select top 1 * from cb_AddDevelopCost"</span>)
+    <span style="color:red">.</span>ToSingle<span style="color:red">&lt;</span><span style="color:#2b91af">CbAddDevelopCost</span><span style="color:red">&gt;</span>();
+
+</pre>
+
+
+
+<p>用下面的方法可以获取一个实体列表：
+</p>
+
+<pre class="code">
+
+<span style="color:#2b91af">List</span><span style="color:red">&lt;</span><span style="color:#2b91af">CbAddDevelopCost</span><span style="color:red">&gt; </span>list <span style="color:red">= </span><span style="color:#2b91af">CPQuery</span><span style="color:red">.</span>From(<span style="color:#a31515">"select top 20 * from cb_AddDevelopCost"</span>)
+    <span style="color:red">.</span>ToList<span style="color:red">&lt;</span><span style="color:#2b91af">CbAddDevelopCost</span><span style="color:red">&gt;</span>();
+
+</pre>
+
+
+
+
+
+
+</div>
+</div>
+</body>
+
+</html>

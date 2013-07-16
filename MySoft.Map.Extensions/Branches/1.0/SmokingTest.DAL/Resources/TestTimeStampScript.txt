@@ -1,0 +1,12 @@
+
+
+CREATE TABLE [dbo].[TestTimeStamp](
+	[GuidId] [uniqueidentifier] NOT NULL,
+	[TsValue] [timestamp] NOT NULL,
+	[StrValue] [varchar](50) NOT NULL,
+	[IntValue] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[GuidId] ASC
+))
+

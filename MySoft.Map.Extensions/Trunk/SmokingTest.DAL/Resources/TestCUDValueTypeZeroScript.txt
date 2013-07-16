@@ -1,0 +1,15 @@
+
+CREATE TABLE [dbo].[TestCUDValueTypeZero](
+	[Id] [int] NOT NULL,
+	[StrValue] [varchar](50) NULL,
+	[ByteValue] [binary](50) NULL,
+	[IntValue] [int] NULL,
+ CONSTRAINT [PK_TestCUDValueTypeZero] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)
+) 
+
+
+
+

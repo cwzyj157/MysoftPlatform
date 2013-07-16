@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>特性介绍</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+
+<p class="title">.net 版本支持</p>
+
+<ol>
+	<li>新的数据访问API只支持 .net 3.5以上版本。</li>
+	<li>VS2003的项目，如果需要使用，请升级.net framework.</li>
+</ol>
+
+<p></p><hr /><p></p>
+
+
+<p class="title">调用存储过程</p>
+
+<ol>
+	<li>支持带返回值的命令参数。</li>
+	<li>支持从存储过程中获取一个实体列表。</li>
+	<li>支持从存储过程中获取一个实体对象。</li>
+	<li>支持从存储过程中获取一个标量值。</li>
+	<li>支持从存储过程中获取一个标量列表。</li>
+	<li>支持从存储过程中获取一个DataTable </li>
+	<li>默认情况下会自动生成SqlParameter数组，但也支持手工指定，满足未知需求。 </li>
+</ol>
+
+
+
+
+<p></p><hr /><p></p>
+
+
+<p class="title">执行参数化SQL语句</p>
+
+<ol>
+	<li>【不】支持带返回值的命令参数。</li>
+	<li>支持从参数化SQL得到一个实体列表。</li>
+	<li>支持从参数化SQL得到一个实体对象。</li>
+	<li>支持从参数化SQL得到一个标量值。</li>
+	<li>支持从参数化SQL得到一个标量列表。</li>
+	<li>支持从参数化SQL得到一个DataTable </li>
+	<li>默认情况下会自动生成SqlParameter数组，但也支持手工指定，满足未知需求。 </li>
+</ol>
+
+
+<p></p><hr /><p></p>
+
+
+<p class="title">连接与事务</p>
+
+<ol>
+	<li>用ConnectionScope创建一个作用域，实现多个操作共享连接。</li>
+	<li>用ConnectionScope创建一个作用域，实现事务支持。 </li>
+	<li>ConnectionScope允许嵌套。</li>
+	<li>在事务的作用域范围内，事件的订阅者也会进入事务控制范围内。</li>
+</ol>
+
+
+
+
+
+<p></p><hr /><p></p>
+
+
+<p class="title">实体要求与建议</p>
+
+<ol>
+	<li>建议将所有数据实体定义到专门的类库项目中，文件名以 .Entity.dll 结尾</li>
+	<li>建议所有数据实体从BaseEntity继承过来。</li>
+	<li>实体的数据成员只支持属性，不支持字段。</li>
+	<li>实体不支持嵌套。</li>
+</ol>
+
+
+
+
+<p></p><hr /><p></p>
+
+
+<p class="title">支持的SQLSERVER数据类型</p>
+
+<p><img src="../_res/Images/dal/SupportedSqlDataType.png" /></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+</div>
+
+</body>
+
+</html>

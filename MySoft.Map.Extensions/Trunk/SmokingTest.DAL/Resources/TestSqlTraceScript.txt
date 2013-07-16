@@ -1,0 +1,14 @@
+CREATE TABLE [dbo].[TestSqlTrace](
+	[TextData] [ntext] NULL,
+	[BinaryData] [image] NULL,
+	[TransactionID] [bigint] NULL,
+	[NTUserName] [nvarchar](256) NULL,
+	[StartTime] [datetime] NULL,
+	[SqlText] [nvarchar](max) NULL,
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[DatabaseID] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]

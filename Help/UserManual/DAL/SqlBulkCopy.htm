@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>批量操作数据</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+<p>批量操作数据可以通过<span style="color:#2b91af">SqlBulkCopy </span>类来完成,以下代码模拟生成一万个房间的场景：</p>
+<p>注意:事务请在ConnectionScope类的构造函数中指定,不要使用<b class="redText">UseInternalTransaction</b> 枚举。</p>
+<pre class="code">
+<span style="color:green">//准备房间数据
+</span><span style="color:#2b91af">DataTable </span>dt <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">DataTable</span>();
+dt<span style="color:red">.</span>Columns<span style="color:red">.</span>Add(<span style="color:#a31515">"RoomGUID"</span>, <span style="color:blue">typeof</span>(<span style="color:#2b91af">Guid</span>));
+dt<span style="color:red">.</span>Columns<span style="color:red">.</span>Add(<span style="color:#a31515">"BUGUID"</span>, <span style="color:blue">typeof</span>(<span style="color:#2b91af">Guid</span>));
+dt<span style="color:red">.</span>Columns<span style="color:red">.</span>Add(<span style="color:#a31515">"ProjGUID"</span>, <span style="color:blue">typeof</span>(<span style="color:#2b91af">Guid</span>));
+dt<span style="color:red">.</span>Columns<span style="color:red">.</span>Add(<span style="color:#a31515">"BldGUID"</span>, <span style="color:blue">typeof</span>(<span style="color:#2b91af">Guid</span>));
+dt<span style="color:red">.</span>Columns<span style="color:red">.</span>Add(<span style="color:#a31515">"Unit"</span>, <span style="color:blue">typeof</span>(<span style="color:blue">string</span>));
+dt<span style="color:red">.</span>Columns<span style="color:red">.</span>Add(<span style="color:#a31515">"Floor"</span>, <span style="color:blue">typeof</span>(<span style="color:blue">string</span>));
+dt<span style="color:red">.</span>Columns<span style="color:red">.</span>Add(<span style="color:#a31515">"No"</span>, <span style="color:blue">typeof</span>(<span style="color:blue">string</span>));
+dt<span style="color:red">.</span>Columns<span style="color:red">.</span>Add(<span style="color:#a31515">"Room"</span>, <span style="color:blue">typeof</span>(<span style="color:blue">string</span>));
+dt<span style="color:red">.</span>Columns<span style="color:red">.</span>Add(<span style="color:#a31515">"RoomCode"</span>, <span style="color:blue">typeof</span>(<span style="color:blue">string</span>));
+dt<span style="color:red">.</span>Columns<span style="color:red">.</span>Add(<span style="color:#a31515">"HuXing"</span>, <span style="color:blue">typeof</span>(<span style="color:blue">string</span>));
+dt<span style="color:red">.</span>Columns<span style="color:red">.</span>Add(<span style="color:#a31515">"Status"</span>, <span style="color:blue">typeof</span>(<span style="color:blue">string</span>));
+dt<span style="color:red">.</span>Columns<span style="color:red">.</span>Add(<span style="color:#a31515">"BldArea"</span>, <span style="color:blue">typeof</span>(<span style="color:blue">decimal</span>));
+dt<span style="color:red">.</span>Columns<span style="color:red">.</span>Add(<span style="color:#a31515">"TnArea"</span>, <span style="color:blue">typeof</span>(<span style="color:blue">decimal</span>));
+<span style="color:green">//...其他字段
+
+//模拟生成1W个房间
+</span><span style="color:#2b91af">Random </span>rnd <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">Random</span>();
+<span style="color:blue">for</span>( <span style="color:blue">int </span>i <span style="color:red">= </span><span style="color:purple">0</span>; i <span style="color:red">&lt; </span><span style="color:purple">10000</span>; i<span style="color:red">++ </span>) {
+    <span style="color:#2b91af">DataRow </span>row <span style="color:red">= </span>dt<span style="color:red">.</span>NewRow();
+    row[<span style="color:#a31515">"RoomGUID"</span>] <span style="color:red">= </span><span style="color:#2b91af">Guid</span><span style="color:red">.</span>NewGuid();
+    row[<span style="color:#a31515">"BUGUID"</span>] <span style="color:red">= </span>buGuid;
+    row[<span style="color:#a31515">"ProjGUID"</span>] <span style="color:red">= </span>projGuid;
+    row[<span style="color:#a31515">"BldGUID"</span>] <span style="color:red">= </span>bldGuid;
+    row[<span style="color:#a31515">"Unit"</span>] <span style="color:red">= </span><span style="color:#a31515">"..."</span>;
+    row[<span style="color:#a31515">"Floor"</span>] <span style="color:red">= </span><span style="color:#a31515">"..."</span>;
+    row[<span style="color:#a31515">"No"</span>] <span style="color:red">= </span><span style="color:#a31515">"..."</span>;
+    row[<span style="color:#a31515">"Room"</span>] <span style="color:red">= </span><span style="color:#a31515">"..."</span>;
+    row[<span style="color:#a31515">"RoomCode"</span>] <span style="color:red">= </span><span style="color:#a31515">"..."</span>;
+    row[<span style="color:#a31515">"HuXing"</span>] <span style="color:red">= </span><span style="color:#a31515">"..."</span>;
+    row[<span style="color:#a31515">"Status"</span>] <span style="color:red">= </span><span style="color:#a31515">"销控"</span>;
+    row[<span style="color:#a31515">"BldArea"</span>] <span style="color:red">= </span><span style="color:purple">100m </span><span style="color:red">* </span>(<span style="color:blue">decimal</span>)rnd<span style="color:red">.</span>NextDouble();
+    row[<span style="color:#a31515">"TnArea"</span>] <span style="color:red">= </span><span style="color:purple">100m </span><span style="color:red">* </span>(<span style="color:blue">decimal</span>)rnd<span style="color:red">.</span>NextDouble();
+    <span style="color:green">//...其他字段
+    </span>dt<span style="color:red">.</span>Rows<span style="color:red">.</span>Add(row);
+}
+
+<span style="color:green">//这里使用了事务,如果不使用事务,请使用ConnectionScope类的无参构造函数
+</span><span style="color:blue">using</span>( <span style="color:#2b91af">ConnectionScope </span>scope <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">ConnectionScope</span>(TransactionMode<span style="color:red">.</span>Required) ) {
+
+    <span style="color:green">//创建SqlBulkCopy对象,并设定引发触发器动作
+    </span><span style="color:#2b91af">SqlBulkCopy </span>bulkCopy <span style="color:red">= </span>scope<span style="color:red">.</span>CreateSqlBulkCopy(<span style="color:#2b91af">SqlBulkCopyOptions</span><span style="color:red">.</span>FireTriggers);
+
+    <span style="color:green">//设置写入目标表名
+    </span>bulkCopy<span style="color:red">.</span>DestinationTableName <span style="color:red">= </span><span style="color:#a31515">"TestBulkCopy"</span>;
+
+    <span style="color:green">//写入数据
+    </span>bulkCopy<span style="color:red">.</span>WriteToServer(dt);
+
+    <span style="color:green">//其他数据库操作
+    //update OtherTable set Column1 = @Column1....
+
+    //提交事务,如果不启用事务,无需Commit();
+    </span>scope<span style="color:red">.</span>Commit();
+}
+
+</pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+</div>
+</body>
+
+</html>

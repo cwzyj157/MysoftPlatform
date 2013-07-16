@@ -1,0 +1,11 @@
+CREATE PROC [usp_TestParameters]
+(
+	@pInt INT,
+	@pStr VARCHAR(36),
+	@pGUID UNIQUEIDENTIFIER,
+	@pDtm DATETIME
+)
+AS
+BEGIN
+	SELECT 1
+END

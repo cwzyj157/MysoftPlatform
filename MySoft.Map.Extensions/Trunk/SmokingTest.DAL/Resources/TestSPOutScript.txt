@@ -1,0 +1,40 @@
+
+CREATE TABLE [dbo].[TestSPOut](
+	[GuiId] [uniqueidentifier] NOT NULL,
+	[TstValue] [timestamp] NULL,
+	[StrValue] [varchar](50) NULL,
+	[IntValue] [int] NULL,
+ CONSTRAINT [PK_TestSPOut] PRIMARY KEY CLUSTERED 
+(
+	[GuiId] ASC
+)
+) 
+
+GO
+
+IF   exists (select * from sysobjects where id = object_id(N'[GetToSingleTestSPOut]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)  
+DROP PROC [dbo].GetToSingleTestSPOut
+GO
+CREATE PROC GetToSingleTestSPOut(
+	@GuiId uniqueidentifier,
+	@StrValue varchar(50) output
+)
+AS
+DECLARE  @Strv varchar(50)
+SELECT TOP 1 @Strv=StrValue FROM  TestSPOut WHERE GuiId=@GuiId
+SET @StrValue=@Strv
+
+
+GO
+IF EXISTS(SELECT * FROM dbo.sysobjects WHERE id=OBJECT_ID(N'[dbo].[TestNullValue]') AND OBJECTPROPERTY(id,   N'IsProcedure') = 1)
+DROP PROC [dbo].TestNullValue
+GO
+CREATE PROC TestNullValue
+(
+	@name VARCHAR(50)
+)
+AS
+IF @name IS NULL
+SELECT 1
+ELSE
+SELECT 2

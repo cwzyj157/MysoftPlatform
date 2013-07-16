@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>AppForm的数据保存</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+
+<p class="title">如何保存单条记录</p>
+
+<p>
+<pre class="code">
+<span style="color:green">//AppForm返回的dataxml
+</span><span style="color:blue">string </span>xml <span style="color:red">= </span><span style="color:#a31515">@"&lt;Product keyname='ProductGUID' keyvalue=''&gt;
+        &lt;ProductName&gt;产品名称一&lt;/ProductName&gt;
+        &lt;ModifyDate&gt;2013-04-25&lt;/ModifyDate&gt;
+        &lt;Amount&gt;23800&lt;/Amount&gt;
+        &lt;Remarks&gt;这里是备注&lt;/Remarks&gt;
+    &lt;/Product&gt;"</span>;
+
+<span style="color:green">//使用统一的返回值对象来声明返回值
+</span><span style="color:#2b91af">HttpResult </span>hr <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">HttpResult</span>();
+
+<span style="color:green">//将xml直接转换为Product实体
+</span><span style="color:#2b91af">Product </span>product <span style="color:red">= </span><span style="color:#2b91af">XmlDataEntity</span><span style="color:red">.</span>ConvertXmlToSingle<span style="color:red">&lt;</span><span style="color:#2b91af">Product</span><span style="color:red">&gt;</span>(xml);
+
+<span style="color:green">//启用事务,可以与其他数据库操作共用一个事务
+</span><span style="color:blue">using</span>( <span style="color:#2b91af">ConnectionScope </span>scope <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">ConnectionScope</span>(<span style="color:#2b91af">TransactionMode</span><span style="color:red">.</span>Required) ) {
+    
+    <span style="color:green">//主键为空表示是新增状态
+    </span><span style="color:blue">if</span>( product<span style="color:red">.</span>ProductGUID <span style="color:red">== </span><span style="color:#2b91af">Guid</span><span style="color:red">.</span>Empty ) {
+
+        <span style="color:green">//对主键赋值,如果系统中已经使用有序GUID,请使用有序GUID</span>
+        product<span style="color:red">.</span>ProductGUID <span style="color:red">= </span><span style="color:#2b91af">Guid</span><span style="color:red">.</span>NewGuid();
+        product<span style="color:red">.</span>Insert(); <span style="color:green">//插入数据库
+    </span>}
+    <span style="color:blue">else </span>{
+
+        product<span style="color:red">.</span>Update(); <span style="color:green">//更新数据库
+    </span>}
+
+    <span style="color:green">//...其他数据库操作
+
+    </span>hr<span style="color:red">.</span>Result <span style="color:red">= </span><span style="color:blue">true</span>;
+
+    <span style="color:green">//提交事务</span>
+    scope<span style="color:red">.</span>Commit();
+}
+
+<span style="color:green">//为返回值的KeyValue属性赋值
+</span>hr<span style="color:red">.</span>KeyValue <span style="color:red">= </span>product<span style="color:red">.</span>ProductGUID<span style="color:red">.</span>ToString();
+<span style="color:blue">return </span>hr<span style="color:red">.</span>ToXml(); <span style="color:green">//调用xml序列化扩展方法,直接序列化为&lt;xml result=...格式的xml
+</span>
+</pre>
+
+</p>
+
+
+<p class="title">如何保存多条记录</p>
+
+<p>
+<pre class="code">
+<span style="color:green">//xml文本,第二层节点采用AppFrom格式的Xml
+</span><span style="color:blue">string </span>xml <span style="color:red">= </span><span style="color:#a31515">@"&lt;UserData&gt;
+        &lt;p_room keyname='RoomGUID' keyvalue=''&gt;
+            &lt;RoomCode&gt;1-1&lt;/RoomCode&gt;
+            &lt;BldArea&gt;44.56&lt;/BldArea&gt;
+        &lt;/p_room&gt;
+        &lt;p_room keyname='RoomGUID' keyvalue=''&gt;
+            &lt;RoomCode&gt;1-2&lt;/RoomCode&gt;
+            &lt;BldArea&gt;55.67&lt;/BldArea&gt;
+        &lt;/p_room&gt;
+    &lt;/UserData&gt;"</span>;
+
+<span style="color:green">//使用统一的返回值对象来声明返回值
+</span><span style="color:#2b91af">HttpResult </span>hr <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">HttpResult</span>();
+
+<span style="color:#2b91af">List</span><span style="color:red">&lt;</span><span style="color:#2b91af">PRoom</span><span style="color:red">&gt; </span>rooms <span style="color:red">= </span><span style="color:#2b91af">XmlDataEntity</span><span style="color:red">.</span>ConvertXmlToList<span style="color:red">&lt;</span><span style="color:#2b91af">PRoom</span><span style="color:red">&gt;</span>(xml);
+
+<span style="color:green">//启用事务,可以与其他数据库操作共用一个事务
+</span><span style="color:blue">using</span>( <span style="color:#2b91af">ConnectionScope </span>scope <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">ConnectionScope</span>(<span style="color:#2b91af">TransactionMode</span><span style="color:red">.</span>Required) ) {
+
+    <span style="color:blue">foreach</span>( <span style="color:#2b91af">PRoom </span>room <span style="color:blue">in </span>rooms ) {
+
+        <span style="color:green">//主键为空表示是新增状态
+        </span><span style="color:blue">if</span>( room<span style="color:red">.</span>RoomGUID <span style="color:red">== </span><span style="color:#2b91af">Guid</span><span style="color:red">.</span>Empty ) {
+            <span style="color:green">//对主键赋值,如果系统中已经使用有序GUID,请使用有序GUID</span>
+            room<span style="color:red">.</span>RoomGUID <span style="color:red">= </span><span style="color:#2b91af">Guid</span><span style="color:red">.</span>NewGuid();
+            room<span style="color:red">.</span>Insert(); <span style="color:green">//插入数据库</span>
+        }
+        <span style="color:blue">else </span>{
+            room<span style="color:red">.</span>Update(); <span style="color:green">//更新数据库</span>
+        }
+    }
+
+    <span style="color:green">//...其他数据库操作
+
+    </span>hr<span style="color:red">.</span>Result <span style="color:red">= </span><span style="color:blue">true;
+
+    </span><span style="color:green">//提交事务</span>
+    scope<span style="color:red">.</span>Commit();
+}
+
+<span style="color:blue">return </span>hr<span style="color:red">.</span>ToXml();
+}
+
+</pre>
+</p>
+
+<p class="title">如何保存主从表</p>
+
+<p>
+<pre class="code">
+<span style="color:green">//主表xml文本
+</span><span style="color:blue">string </span>xmlMaster <span style="color:red">= </span><span style="color:#a31515">@"&lt;TestDyContract keyname='DyContractGUID' keyvalue=''&gt;
+                &lt;DyContractNo&gt;lijf01&lt;/DyContractNo&gt;
+                &lt;DyDate&gt;2013-04-25&lt;/DyDate&gt;
+                &lt;JkContractNo&gt;no3&lt;/JkContractNo&gt;
+                &lt;JkBank&gt;招商银行&lt;/JkBank&gt;
+                &lt;JkAmount&gt;13800&lt;/JkAmount&gt;
+                &lt;Pgcompany&gt;GMC&lt;/Pgcompany&gt;
+                &lt;PgAmount&gt;23800&lt;/PgAmount&gt;
+                &lt;Remarks&gt;2222222&lt;/Remarks&gt;
+            &lt;/TestDyContract&gt;"</span>;
+
+<span style="color:green">//从表xml文本
+</span><span style="color:blue">string </span>xmlDetail <span style="color:red">= </span><span style="color:#a31515">@"&lt;TestDyRoom keyname='DyRoomGUID' keyvalue=''&gt;
+                &lt;RoomGUID&gt;3b49b96a-92ef-4deb-877c-034d5a0b2b21&lt;/RoomGUID&gt;
+                &lt;DyContractGUID&gt;&lt;/DyContractGUID&gt;
+                &lt;DyAmount&gt;2,122&lt;/DyAmount&gt;
+                &lt;DyDate&gt;&lt;/DyDate&gt;
+                &lt;ZxNo&gt;111&lt;/ZxNo&gt;
+                &lt;DyMemo&gt;111&lt;/DyMemo&gt;
+            &lt;/TestDyRoom&gt;
+            &lt;TestDyRoom keyname='DyRoomGUID' keyvalue=''&gt;
+                &lt;RoomGUID&gt;49bdc087-fa00-4653-a1e5-0410da84c4f0&lt;/RoomGUID&gt;
+                &lt;DyContractGUID&gt;&lt;/DyContractGUID&gt;
+                &lt;DyAmount&gt;222&lt;/DyAmount&gt;
+                &lt;DyDate&gt;&lt;/DyDate&gt;
+                &lt;ZxNo&gt;111&lt;/ZxNo&gt;
+                &lt;DyMemo&gt;111&lt;/DyMemo&gt;
+            &lt;/TestDyRoom&gt;"</span>;
+
+<span style="color:#2b91af">HttpResult </span>hr <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">HttpResult</span>();
+
+<span style="color:green">//直接转换主从表xml为实体
+</span><span style="color:#2b91af">TestDyContract </span>contract <span style="color:red">= </span><span style="color:#2b91af">XmlDataEntity</span><span style="color:red">.</span>ConvertXmlToSingle<span style="color:red">&lt;</span><span style="color:#2b91af">TestDyContract</span><span style="color:red">&gt;</span>(xmlMaster);
+<span style="color:#2b91af">List</span><span style="color:red">&lt;</span><span style="color:#2b91af">TestDyRoom</span><span style="color:red">&gt; </span>rooms <span style="color:red">= </span><span style="color:#2b91af">XmlDataEntity</span><span style="color:red">.</span>ConvertXmlToList<span style="color:red">&lt;</span><span style="color:#2b91af">TestDyRoom</span><span style="color:red">&gt;</span>(xmlDetail);
+
+<span style="color:green">//启用事务,主从表共用一个事务保存
+</span><span style="color:blue">using</span>( <span style="color:#2b91af">ConnectionScope </span>scope <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">ConnectionScope</span>(<span style="color:#2b91af">TransactionMode</span><span style="color:red">.</span>Required) ) {
+
+    <span style="color:green">//保存主表</span>
+    <span style="color:blue">if</span>( contract<span style="color:red">.</span>DyContractGUID <span style="color:red">== </span><span style="color:#2b91af">Guid</span><span style="color:red">.</span>Empty ) {
+    
+        <span style="color:green">//主键为空表示是新增状态</span>
+        <span style="color:green">//对主键赋值,如果系统中已经使用有序GUID,请使用有序GUID</span>
+        contract<span style="color:red">.</span>DyContractGUID <span style="color:red">= </span><span style="color:#2b91af">Guid</span><span style="color:red">.</span>NewGuid();
+        contract<span style="color:red">.</span>Insert(); <span style="color:green">//插入数据库</span>
+    }
+    <span style="color:blue">else </span>{
+        contract<span style="color:red">.</span>Update(); <span style="color:green">//更新数据库</span>
+    }
+
+    <span style="color:green">//保存从表
+    </span><span style="color:blue">foreach</span>( <span style="color:#2b91af">TestDyRoom </span>room <span style="color:blue">in </span>rooms ) {
+
+        <span style="color:green">//外键字段</span>
+        room<span style="color:red">.</span>DyContractGUID <span style="color:red">= </span>contract<span style="color:red">.</span>DyContractGUID;
+
+        <span style="color:blue">if</span>( room<span style="color:red">.</span>RoomGUID <span style="color:red">== </span><span style="color:#2b91af">Guid</span><span style="color:red">.</span>Empty ) {
+            
+            <span style="color:green">//主键为空表示是新增状态</span>
+            <span style="color:green">//对主键赋值,如果系统中已经使用有序GUID,请使用有序GUID</span>
+            room<span style="color:red">.</span>RoomGUID <span style="color:red">= </span><span style="color:#2b91af">Guid</span><span style="color:red">.</span>NewGuid();
+            room<span style="color:red">.</span>Insert(); <span style="color:green">//插入数据库</span>
+        }
+        <span style="color:blue">else </span>{
+            room<span style="color:red">.</span>Update(); <span style="color:green">//更新数据库</span>
+        }
+    }
+
+    <span style="color:green">//...其他数据库操作
+
+    </span>hr<span style="color:red">.</span>Result <span style="color:red">= </span><span style="color:blue">true</span>;
+
+    <span style="color:green">//提交事务</span>
+    scope<span style="color:red">.</span>Commit();
+}
+
+hr<span style="color:red">.</span>KeyValue <span style="color:red">= </span>contract<span style="color:red">.</span>DyContractGUID<span style="color:red">.</span>ToString();
+<span style="color:blue">return </span>hr<span style="color:red">.</span>ToXml();
+
+</pre>
+</p>
+
+
+
+
+</div>
+</div>
+</body>
+
+</html>

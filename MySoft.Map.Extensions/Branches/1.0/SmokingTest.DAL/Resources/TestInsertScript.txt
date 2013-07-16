@@ -1,0 +1,15 @@
+CREATE TABLE [dbo].[TestInsert](
+	[Ids] [int] IDENTITY(1,1) NOT NULL,
+	[PkId] [int] NOT NULL,
+	[TimeStampValue] [timestamp] NULL,
+	[GuidId] [uniqueidentifier] NULL,
+	[StrValue] [varchar](50) NULL,
+	[ByteValue] [varbinary](50) NULL,
+ CONSTRAINT [PK_TestInsert] PRIMARY KEY CLUSTERED 
+(
+	[PkId] ASC
+))
+GO
+
+ALTER TABLE [dbo].[TestInsert] ADD  CONSTRAINT [DF_TestInsert_GuidId]  DEFAULT (newsequentialid()) FOR [GuidId]
+GO

@@ -1,0 +1,3 @@
+﻿1.请先在数据库中执行Data.sql
+2.修改App_Code\AppHelper.cs中对应的连接字符串，指向刚执行过SQL的数据库
+3.将Default.aspx设置为起始页。预览页面。

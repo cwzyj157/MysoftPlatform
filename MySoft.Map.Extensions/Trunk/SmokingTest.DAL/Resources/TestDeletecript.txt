@@ -1,0 +1,13 @@
+
+
+
+CREATE TABLE [dbo].[TestDelete](
+	[Id] [int] NOT NULL,
+	[Guiid] [uniqueidentifier] NOT NULL,
+	[StrValue] [varchar](50) NULL,
+	[TstValue] [timestamp] NULL,
+ CONSTRAINT [PK_TestDelete] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC,
+	[Guiid] ASC
+))

@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>XML API - XML使用建议</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+
+<p class="title">服务端（ .net ）</p>
+
+<p>
+1. 不要先想着如何定义XML结构（<b class="redText">可以忽略XML结构</b>）<br />
+2. 先定义数据类型，用类型嵌套实现XML结构嵌套。<br />
+3. 生成XML用序列化的方法，<br />
+4. 读取XML用反序列化的方法。
+</p>
+
+
+<p class="title">客户端（ Javascript ）</p>
+
+<p>
+1. 不建议使用XML，因为操作不方便，且传输数据量大。<br />
+2. 建议使用JSON格式，Javascript原生支持，传输量更小。
+</p>
+
+</div>
+</div>
+</body>
+
+</html>

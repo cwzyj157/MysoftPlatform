@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>动态拼接 参数化SQL</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+<p>根据用户的输入条件，动态创建查询是个常见需求，例如下面的查询界面：</p>
+
+<p><img src="../_res/Images/dal/CPQueryDEMO.png" /></p>
+
+
+
+<p>使用新的API，我们可以这样实现动态的查询条件：</p>
+<pre class="code">
+<span style="color:blue">private </span><span style="color:#2b91af">CPQuery </span>BuildDynamicQuery(<span style="color:#2b91af">Product </span>p)
+{
+    <span style="color:green">// 下面二行代码是等价的，可根据喜好选择。
+    </span><span style="color:blue">var </span>query <span style="color:red">= </span><span style="color:#a31515">"select ProductID, ProductName from Products with(nolock) where (1=1) "</span><span style="color:red">.</span>AsCPQuery();
+    <span style="color:green">//var query = CPQuery.Create() + "select ProductID, ProductName from Products where (1=1) ";
+
+    </span><span style="color:blue">if</span>( p<span style="color:red">.</span>ProductID <span style="color:red">&gt; </span><span style="color:purple">0 </span>)    <span style="color:green">// 用户输入了ProductID
+        </span>query <span style="color:red">= </span>query <span style="color:red">+ </span><span style="color:#a31515">" and ProductID = " </span><span style="color:red">+ </span>p<span style="color:red">.</span>ProductID;    <span style="color:green">// 整数参数。
+
+    </span><span style="color:blue">if</span>( <span style="color:blue">string</span><span style="color:red">.</span>IsNullOrEmpty(p<span style="color:red">.</span>ProductName) <span style="color:red">== </span><span style="color:blue">false </span>)    <span style="color:green">// 用户输入了ProductName
+        // 给查询添加一个字符串参数。
+        </span>query <span style="color:red">= </span>query <span style="color:red">+ </span><span style="color:#a31515">" and ProductName like " </span><span style="color:red">+ </span>p<span style="color:red">.</span>ProductName<span style="color:red">.</span>AsQueryParameter();
+
+    <span style="color:blue">if</span>( p<span style="color:red">.</span>CategoryID <span style="color:red">&gt; </span><span style="color:purple">0 </span>)        <span style="color:green">// 用户输入了CategoryID
+        </span>query <span style="color:red">= </span>query <span style="color:red">+ </span><span style="color:#a31515">" and CategoryID = " </span><span style="color:red">+ </span>p<span style="color:red">.</span>CategoryID;    <span style="color:green">// 整数参数。
+
+    </span><span style="color:blue">if</span>( <span style="color:blue">string</span><span style="color:red">.</span>IsNullOrEmpty(p<span style="color:red">.</span>Unit) <span style="color:red">== </span><span style="color:blue">false </span>)    <span style="color:green">// 用户输入了Unit
+        </span>query <span style="color:red">= </span>query <span style="color:red">+ </span><span style="color:#a31515">" and Unit = " </span><span style="color:red">+ </span>(<span style="color:#2b91af">QueryParameter</span>)p<span style="color:red">.</span>Unit;    <span style="color:green">// 字符串参数
+
+    </span><span style="color:blue">if</span>( p<span style="color:red">.</span>UnitPrice <span style="color:red">&gt; </span><span style="color:purple">0 </span>)    <span style="color:green">// 用户输入了UnitPrice
+        </span>query <span style="color:red">= </span>query <span style="color:red">+ </span><span style="color:#a31515">" and UnitPrice &gt;= " </span><span style="color:red">+ </span>p<span style="color:red">.</span>UnitPrice;    <span style="color:green">// decimal参数。
+
+    </span><span style="color:blue">if</span>( p<span style="color:red">.</span>Quantity <span style="color:red">&gt; </span><span style="color:purple">0 </span>)    <span style="color:green">// 用户输入了Quantity
+        </span>query <span style="color:red">= </span>query <span style="color:red">+ </span><span style="color:#a31515">" and Quantity &gt;= " </span><span style="color:red">+ </span>p<span style="color:red">.</span>Quantity;    <span style="color:green">// 整数参数。
+
+    </span><span style="color:blue">return </span>query;
+}
+</pre>
+
+
+<p><b class="redText">注意：</b><br />
+1. 除了字符串参数值以外，其它类型的参数可以直接用加号与SQL代码片段相加。<br />
+2. 字符串类型的参数值必段调用AsQueryParameter()扩展方法，或者显式转换成QueryParameter类型。<br />
+3. 拼接的结果不是一个【SQL字符串】，而是一个CPQuery对象。
+</p>
+
+<p><br /></p>
+
+<p class="warning">
+<b class="redText">绝对不能</b> 将 <b class="redText">query = query +</b> " and Quantity &gt;= " + p.Quantity;<br />
+　　　写成： <b class="redText">query +=</b> " and Quantity &gt;= " + p.Quantity;
+</p>
+
+<p><br /></p>
+
+<p class="warning">
+<b class="redText">警告：参数值的类型一定要与相关的字段类型匹配，CPQuery不负责类型转换。</b> 
+</p>
+
+
+<p><br /></p>
+
+<p>有了CPQuery对象，后面你调用什么方法我想你应该清楚（由业务逻辑决定）：
+</p>
+
+<p><img src="../_res/Images/dal/CPQuery-1.png" />
+</p>
+
+
+<p></p><hr /><p></p>
+
+<p class="title">CPQuery的拼接工作原理</p>
+
+<p>
+1. 与 <b class="redText">字符串</b> 拼接时，认为是 <b class="redText">参数化SQL的一部分</b>。<br />
+2. 与 <b class="redText">非字符串</b> 值拼接时，认为是一个 <b class="redText">参数值</b>。<br />
+3. 当需要拼接 <b class="redText">字符串参数值</b> 时，由于CPQuery无法知道调用者的意图，所以需要显示调用AsQueryParameter扩展方法或者显式类型转换(QueryParameter)。<br />
+4. CPQuery在拼接 <b class="redText">参数值</b> 的时候，会将一个参数占位符写到参数化SQL语句中，而参数值是通过命令参数形式传给SQLSERVER的。
+</p>
+
+
+
+
+
+
+
+<p></p><hr /><p></p>
+
+<p class="title">CPQuery常见问题</p>
+
+<p><b>1. 用CPQuery在拼接 like 语句时，% 加在哪里？</b><br />
+答：加在字符串变量中，不能直接加到SQL语句中，例如：
+</p>
+<pre class="code">
+<span style="color:green;background:white">// 拼接【字符串】参数
+// 请注意下面的 LIKE 拼接方法：【百分号和参数值】是做为一个参数值，
+// 百分号绝对不能写到SQL语句中，因为那就不是参数化的SQL语句了。
+</span><span style="color:blue;background:white">if</span><span style="color:black;background:white">( </span><span style="color:blue;background:white">string</span><span style="color:red;background:white">.</span><span style="color:black;background:white">IsNullOrEmpty(txtRoomInfo</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Text</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Trim()) </span><span style="color:red;background:white">== </span><span style="color:blue;background:white">false </span><span style="color:black;background:white">)
+    query </span><span style="color:red;background:white">= </span><span style="color:black;background:white">query </span><span style="color:red;background:white">+ </span><span style="color:#a31515;background:white">" AND RoomInfo LIKE " </span><span style="color:red;background:white">+  </span><span style="color:black;background:white">(</span><span style="color:#a31515;background:white">"%" </span><span style="color:red;background:white">+ </span><span style="color:black;background:white">txtRoomInfo</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Text </span><span style="color:red;background:white">+ </span><span style="color:#a31515;background:white">"%"</span><span style="color:black;background:white">)</span><span style="color:red;background:white">.</span><span style="color:black;background:white">AsQueryParameter();</span>
+</pre>
+
+
+
+<p><br />
+<b>2. CPQuery除了支持拼接参数之外，还支持哪些拼接？ ordre by支持吗？ top n 支持吗？</b><br />
+答：CPQuery最终得到的是一个参数化的SQL，参数化SQL支持的，CPQuery就支持。
+</p>
+
+
+
+
+
+
+
+
+</div>
+</div>
+</body>
+
+</html>

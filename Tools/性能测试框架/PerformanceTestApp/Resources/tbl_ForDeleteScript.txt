@@ -1,0 +1,5 @@
+CREATE Table [tbl_ForDelete]
+(
+	PKID int IDENTITY(1,1),
+	ColString VARCHAR(36)
+)

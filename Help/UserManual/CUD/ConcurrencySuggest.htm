@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>并发场景使用建议</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+<style>
+    .childTitle {
+	font-family: "微软雅黑" , "宋体" , "Consolas" , "Courier New";
+	font-size: 16px;
+	color: #660066;
+	font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+
+<p class="title">并发检测方案及适用场景</p>
+<p>
+	并发检测的实现原理:<br />
+	&nbsp;&nbsp;在执行更新,删除语句时,在sql语句的where条件中带上数据的原有值或时间戳,通过判断sql语句的影响行数,即可达到并发检测的目的。<br />
+	例如：<br />
+	&nbsp;&nbsp;delete from 表 where 主键=@主键 and 原始值字段1=@原始值1 and <span class="redText">原始值字段2=@原始值2 ...其他原始值字段</span><br />
+	&nbsp;&nbsp;update 表 set 字段1=@字段1, 字段2=@字段2 ...其他字段 where 主键=@主键 and <span class="redText">时间戳字段=@时间戳值</span><br />
+	&nbsp;&nbsp;如果影响行数为0,说明数据库中的数据发生了改变,无法满足where条件中标记为红色的条件。<br />
+	&nbsp;&nbsp;此时数据访问层将会抛出<span style="color:#2b91af"> OptimisticConcurrencyException </span>异常。<br />
+	&nbsp;&nbsp;下面将介绍两种检测并发方式的适用范围及场景。
+</p>
+<p></p><hr /><p></p>
+<p class="childTitle">通过原始值检测并发</p>
+<p>
+	<img alt="通过原始值检测并发" src="../_res/Images/cud/OriginalValue.JPG" />
+</p>
+
+<p></p><hr /><p></p>
+<p class="childTitle">通过时间戳检测并发</p>
+<p>
+	<img alt="通过原始值检测并发" src="../_res/Images/cud/TimeStamp.JPG" />
+</p>
+
+<p></p><hr /><p></p>
+<p class="title">不同场景下的代码实现</p>
+<p>针对于以上两种并发检测的方式,结合ERP系统中不同的业务场景的分析结果,得到以下四种常见的业务场景,下面将针对这四种业务场景给出示例。</p>
+
+<p></p><hr /><p></p>
+<p class="childTitle">关注一行记录中少部分字段的场景(使用原始值)</p>
+<p>
+	<img alt="界面UI" src="../_res/Images/cud/DemoOriginal-0.JPG" /><br />
+	<img alt="界面UI" src="../_res/Images/cud/DemoOriginal-1.JPG" /><br />
+	<img alt="XML绑定" src="../_res/Images/cud/DemoOriginal-2.JPG" /><br />
+	<img alt="后端更新" src="../_res/Images/cud/DemoOriginal-3.JPG" /><br />
+</p>
+
+<p></p><hr /><p></p>
+<p class="childTitle">关注一行记录中大部分字段的场景(使用时间戳)</p>
+<p>
+	<img alt="界面UI" src="../_res/Images/cud/DemoTimeStamp-0.JPG" /><br />
+	<img alt="界面UI" src="../_res/Images/cud/DemoTimeStamp-1.JPG" /><br />
+	<img alt="XML绑定" src="../_res/Images/cud/DemoTimeStamp-2.JPG" /><br />
+	<img alt="后端更新" src="../_res/Images/cud/DemoTimeStamp-3.JPG" /><br />
+</p>
+
+<p></p><hr /><p></p>
+<p class="childTitle">多行记录的处理方式(本例使用原始值)</p>
+<p>
+	<img alt="界面UI" src="../_res/Images/cud/DemoMutiRow-0.JPG" /><br />
+	<img alt="界面UI" src="../_res/Images/cud/DemoMutiRow-1.JPG" /><br />
+	<img alt="前端绑定" src="../_res/Images/cud/DemoMutiRow-2.JPG" /><br />
+	<img alt="前端搜集" src="../_res/Images/cud/DemoMutiRow-3.JPG" /><br />
+	<img alt="后端更新" src="../_res/Images/cud/DemoMutiRow-4.JPG" /><br />
+</p>
+
+<p></p><hr /><p></p>
+<p class="childTitle">主从表的处理方式(本例使用原始值)</p>
+<p>
+	<img alt="界面UI" src="../_res/Images/cud/OneToMany-0.JPG" /><br />
+	<img alt="界面UI" src="../_res/Images/cud/OneToMany-1.JPG" /><br />
+	<img alt="前端提交" src="../_res/Images/cud/OneToMany-2.JPG" /><br />
+	<img alt="后端更新" src="../_res/Images/cud/OneToMany-3.JPG" /><br />
+</p>
+</div>
+</div>
+</body>
+
+</html>

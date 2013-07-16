@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>XML API - XML结构与类型定义</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+<p>虽然在.net中，我们可以用序列化和反序列化来使用XML，
+但是，这种方法需要一个前提条件：先定义数据类型，
+而我们ERP中，早期是没数据类型的，只有XML结构，
+所以，在使用这种方法时，需要我们先要根据XML结构推导相应的数据类型出来，
+这是一个逆向的分析过程，我们在做这个分析过程前，必须要理解XML结构与类型定义之间的关系，
+本文将介绍按照不同的场景来分别介绍它们的映射关系。
+</p>
+
+
+
+
+<p class="title">服务端，XmlElement</p>
+<p><img src="../_res/Images/XML/01.png" /></p>
+
+
+<p><br /></p><hr />
+<p class="title">服务端，XmlAttribute</p>
+<p><img src="../_res/Images/XML/02.png" /></p>
+
+
+<p><br /></p><hr />
+<p class="title">服务端序列化，重新指定节点名</p>
+<p><img src="../_res/Images/XML/03.png" /></p>
+
+
+
+
+<p><br /></p><hr />
+<p class="title">服务端序列化，数组或者列表</p>
+<p><img src="../_res/Images/XML/04.png" /></p>
+
+
+<p><br /></p><hr />
+<p class="title">服务端序列化，重命名列表根节点</p>
+<p><img src="../_res/Images/XML/05.png" /></p>
+
+
+<p><br /></p><hr />
+<p class="title">服务端序列化，嵌套对象</p>
+<p><img src="../_res/Images/XML/06.png" /></p>
+
+
+<p><br /></p><hr />
+<p class="title">服务端序列化，嵌套对象，重命名子对象节点名</p>
+<p><img src="../_res/Images/XML/07.png" /></p>
+
+
+<p><br /></p><hr />
+<p class="title">客户端序列化，嵌套对象</p>
+<p><img src="../_res/Images/XML/08.png" /></p>
+
+
+
+<p><br /></p><hr />
+<p class="title">客户端序列化，数组，XmlElement</p>
+<p><img src="../_res/Images/XML/09.png" /></p>
+
+
+<p><br /></p><hr />
+<p class="title">客户端序列化，数组，XmlAttribute</p>
+<p><img src="../_res/Images/XML/10.png" /></p>
+
+
+
+
+<p><br /></p><hr />
+<p class="title">从XML结构推导类型定义的方法（服务端）</p>
+
+<p>这是一个逆向推导的过程，请参考以下过程：<br />
+1. 首先要分析整个XML结构，定义一个与之匹配的类型，<br />
+2. 如果XML结构有嵌套层次，则需要定义多个类型与之匹配，<br />
+3. 定义具体类型（一个层级下的XML结构）时，请参考以下表格。
+</p>
+
+
+<table class="MyTable">
+<thead>
+<tr><td>XML形式</td><td>处理方法</td><td>补充说明</td></tr>
+</thead>
+<tr><td>XmlElement</td><td>定义一个属性</td><td>属性名与节点名字匹配</td></tr>
+<tr><td>XmlAttribute</td><td>[XmlAttribute] 加到属性上</td><td></td></tr>
+<tr><td>InnerText</td><td>[XmlText] 加到属性上</td><td>一个类型只能使用一次</td></tr>
+<tr><td>节点重命名</td><td>根节点：[XmlType("testClass")]<br />
+元素节点：[XmlElement("name")]<br />
+属性节点：[XmlAttribute("id")]<br />
+列表子元素节点：[XmlArrayItem("Detail")]<br />
+列表元素自身：[XmlArray("Items")]
+</td><td></td></tr>
+</table>
+
+
+
+
+
+
+<p><br /></p><hr />
+<p class="title">从XML结构推导类型定义的方法（客户端）</p>
+
+<p>这是一个逆向推导的过程，请参考以下过程：<br />
+首先要分析整个XML结构，定义一个与之匹配的类型，<br />
+如果XML结构有嵌套层次，则需要定义多个类型与之匹配，<br />
+定义具体类型（一个层级下的XML结构）时，请参考以下表格。
+</p>
+
+
+<table class="MyTable">
+<thead>
+<tr><td>XML形式</td><td>处理方法</td><td>补充说明</td></tr>
+</thead>
+<tr><td>XmlElement</td><td>定义一个属性</td><td>属性名与节点名字匹配</td></tr>
+<tr><td>XmlAttribute</td><td>定义一个对象，用 __attr 来指定。</td><td></td></tr>
+<tr><td>InnerText</td><td>定义一个对象，用 __text 来指定。</td><td>一个类型只能使用一次</td></tr>
+<tr><td>节点重命名</td><td>不支持重命名（根节点名字在调用时指出）。</td><td></td></tr>
+</table>
+
+
+
+
+</div>
+</div>
+</body>
+
+</html>

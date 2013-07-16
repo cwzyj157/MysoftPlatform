@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Update - 更新数据实体对应的数据记录</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+
+<p>
+示例代码如下：
+</p>
+
+<pre class="code">
+<span style="color:#2b91af;background:white">CbProductCbFtRule </span><span style="color:black;background:white">rule </span><span style="color:red;background:white">= </span><span style="color:blue;background:white">new </span><span style="color:#2b91af;background:white">CbProductCbFtRule</span><span style="color:black;background:white">();
+
+</span><span style="color:green;background:white">// 注意：调用Update方法前，要给主键字段赋值。
+</span><span style="color:black;background:white">rule</span><span style="color:red;background:white">.</span><span style="color:black;background:white">ProductCbFtRuleGUID </span><span style="color:red;background:white">= </span><span style="color:black;background:white">productCbFtRuleGUID;
+
+</span><span style="color:green;background:white">// 再修改其它的数据成员
+</span><span style="color:black;background:white">rule</span><span style="color:red;background:white">.</span><span style="color:black;background:white">FtAmount </span><span style="color:red;background:white">= </span><span style="color:purple;background:white">123.45M</span><span style="color:black;background:white">;
+rule</span><span style="color:red;background:white">.</span><span style="color:black;background:white">FtRate </span><span style="color:red;background:white">= </span><span style="color:purple;background:white">0.2M</span><span style="color:black;background:white">;
+
+</span><span style="color:green;background:white">// Update方法能修改变化过的属性。
+</span><span style="color:black;background:white">rule</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Update();</span>
+
+</pre>
+
+
+<p>执行Update调用后，数据访问层将会生成这样一个参数化SQL，最终执行它：
+</p>
+
+<pre class="code">
+<span style="color:blue">UPDATE </span><span style="color:teal">cb_ProductCbFtRule
+</span><span style="color:blue">set </span><span style="color:teal">FtAmount </span><span style="color:gray">= </span><span style="color:teal">@FtAmount</span><span style="color:gray">, </span><span style="color:teal">FtRate </span><span style="color:gray">= </span><span style="color:teal">@FtRate
+</span><span style="color:blue">where </span><span style="color:teal">ProductCbFtRuleGUID </span><span style="color:gray">= </span><span style="color:teal">@ProductCbFtRuleGUID
+</span>
+</pre>
+
+
+
+
+<p><br /></p>
+
+
+<p><b class="redText">注意：</b><br />
+1. 在执行Update之前，必须为主键对应属性赋值，否则不能生成Where条件。<br />
+2. 如果是复合主键，必须为所有主键字段对应的属性赋值。<br />
+3. 不允许修改主键字段，因为它只用来生成Where条件。<br />
+4. 修改过的非主键属性，将会更新对应的数据字段。<br />
+5. 自增列，时间戳字段，给属性的赋值将会忽略。<br />
+6. 对于值类型字段设置的零问题 <a href="ZeroValue.htm"><b>请点击这里</b></a>。
+</p>
+
+
+
+
+
+
+
+
+
+</div>
+</div>
+</body>
+
+</html>

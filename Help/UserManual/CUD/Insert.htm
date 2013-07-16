@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Insert - 将数据实体保存到数据表</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+
+<p>
+示例代码如下：
+</p>
+
+<pre class="code">
+<span style="color:#2b91af;background:white">CbProductCbFtRule </span><span style="color:black;background:white">rule </span><span style="color:red;background:white">= </span><span style="color:blue;background:white">new </span><span style="color:#2b91af;background:white">CbProductCbFtRule</span><span style="color:black;background:white">();
+
+</span><span style="color:green;background:white">// 为数据字段赋值。
+</span><span style="color:black;background:white">rule</span><span style="color:red;background:white">.</span><span style="color:black;background:white">ProductGUID </span><span style="color:red;background:white">= </span><span style="color:black;background:white">productGUID;
+rule</span><span style="color:red;background:white">.</span><span style="color:black;background:white">CostGUID </span><span style="color:red;background:white">= </span><span style="color:black;background:white">costGUID;
+rule</span><span style="color:red;background:white">.</span><span style="color:black;background:white">ProjGUID </span><span style="color:red;background:white">= </span><span style="color:black;background:white">projGUID;
+rule</span><span style="color:red;background:white">.</span><span style="color:black;background:white">FtMode </span><span style="color:red;background:white">= </span><span style="color:black;background:white">ftMode;
+rule</span><span style="color:red;background:white">.</span><span style="color:black;background:white">FtAmount </span><span style="color:red;background:white">= </span><span style="color:black;background:white">ftAmount;
+rule</span><span style="color:red;background:white">.</span><span style="color:black;background:white">FtRate </span><span style="color:red;background:white">= </span><span style="color:black;background:white">ftRate;
+
+</span><span style="color:green;background:white">// Insert方法能将对象插入相应的数据表中。
+</span><span style="color:black;background:white">rule</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Insert();</span>
+
+</pre>
+
+<p>说明：由于表cb_ProductCbFtRule的主键字段ProductCbFtRuleGUID有默认值：newsequentialid()，<br />
+因此可以不用给这个字段赋值，最终会由SQL Server填入默认值。
+</p>
+
+<p>执行Insert调用后，数据访问层将会生成这样一个参数化SQL，最终执行它：
+</p>
+
+<pre class="code">
+<span style="color:blue">INSERT INTO </span><span style="color:teal">cb_ProductCbFtRule</span><span style="color:gray">( 
+</span><span style="color:teal">ProductCbFtRuleGUID</span><span style="color:gray">, </span><span style="color:teal">FtMode</span><span style="color:gray">, </span><span style="color:teal">FtAmount</span><span style="color:gray">,</span><span style="color:teal">FtRate</span><span style="color:gray">, </span><span style="color:teal">ProductGUID</span><span style="color:gray">,</span><span style="color:teal">CostGUID </span><span style="color:gray">,</span><span style="color:teal">ProjGUID </span><span style="color:gray">)  
+</span><span style="color:blue">VALUES  </span><span style="color:gray">(</span><span style="color:teal">@ProductCbFtRuleGUID</span><span style="color:gray">, </span><span style="color:teal">@FtMode</span><span style="color:gray">, </span><span style="color:teal">@FtAmount</span><span style="color:gray">,</span><span style="color:teal">@FtRate</span><span style="color:gray">, </span><span style="color:teal">@ProductGUID</span><span style="color:gray">,</span><span style="color:teal">@CostGUID</span><span style="color:gray">,</span><span style="color:teal">@ProjGUID </span><span style="color:gray">);
+</span>
+</pre>
+
+
+<p><br /></p>
+
+
+<p><b class="redText">注意：</b><br />
+1. 如果数据表的定义中，字段【不允许】为空，一定要在Insert之前为对应属性赋值。<br />
+2. 对于有默认值的字段，可以不用赋值，最终会使用数据库的字段默认值。<br />
+3. 自增列，时间戳以及有序GUID列，属性的赋值将会忽略。<br />
+4. 对于值类型字段设置零的问题 <a href="ZeroValue.htm"><b>请点击这里</b></a>。
+</p>
+
+
+
+
+<p><br />
+<b class="redText">补充说明：</b><br />
+什么是【有序GUID列】？<br />
+是指有默认值的字段，且默认值表达式为：newsequentialid()
+</p>
+
+
+</div>
+</div>
+</body>
+
+</html>

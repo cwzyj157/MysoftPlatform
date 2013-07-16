@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceTestApp", "PerformanceTestApp\PerformanceTestApp.csproj", "{72D41240-DA7D-4FA9-A017-8C1AFEDD4E65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceTestApp.Entity", "PerformanceTestApp.Entity\PerformanceTestApp.Entity.csproj", "{0955155D-9FDD-4901-9C87-107586B0720D}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://10.5.10.7:8080/tfs/MapExtensions
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = PerformanceTestApp.Entity\\PerformanceTestApp.Entity.csproj
+		SccProjectName1 = PerformanceTestApp.Entity
+		SccLocalPath1 = PerformanceTestApp.Entity
+		SccProjectUniqueName2 = PerformanceTestApp\\PerformanceTestApp.csproj
+		SccProjectName2 = PerformanceTestApp
+		SccLocalPath2 = PerformanceTestApp
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{72D41240-DA7D-4FA9-A017-8C1AFEDD4E65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72D41240-DA7D-4FA9-A017-8C1AFEDD4E65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72D41240-DA7D-4FA9-A017-8C1AFEDD4E65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72D41240-DA7D-4FA9-A017-8C1AFEDD4E65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0955155D-9FDD-4901-9C87-107586B0720D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0955155D-9FDD-4901-9C87-107586B0720D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0955155D-9FDD-4901-9C87-107586B0720D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0955155D-9FDD-4901-9C87-107586B0720D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

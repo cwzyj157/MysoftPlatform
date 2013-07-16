@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>数据实体的使用规范</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+<p>现在，新的数据访问层可以支持从数据库中获取数据实体了，我们又该如何使用实体呢？</p>
+
+
+<p>1. 我们建议只为每个数据表创建一个实体类型，<br />
+　　代码工具也只提供了针对数据表生成数据实体类型的功能。
+</p>
+
+<p>2. 数据实体 <b class="redText">必须</b> 定义在单独的项目，不要和其它的代码混杂在一起。
+</p>
+
+<p>3. 数据实体类型 <b class="redText">必须</b> 放在以 <b class="redText">.Entity.dll</b> 结尾的程序集中。
+</p>
+
+<p>4. 数据实体类型 <b class="redText">必须</b> 包含一个公共无参构造函数。
+</p>
+
+<p>5. 数据实体类型 <b class="redText">不能</b> 定义成嵌套类型。
+</p>
+
+
+
+<p>6. 不要为每个查询创建实体类型。例如我们的cb_Cost数据表已经有超过60个字段了，<br />
+　　如果只查询它的一部分字段，我们就没有必要为那些查询创建对应的数据实体类型。<br />
+　　否则按各种排列组合来生成实体类型，数据实体类型会以爆炸式的速度增长，最终难以维护了。
+</p>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+</div>
+</body>
+
+</html>

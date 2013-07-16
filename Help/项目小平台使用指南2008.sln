@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "UserManual", "UserManual", "{B269BBC9-3DAD-4D4B-A1BD-55CBD9B99E6E}"
+	ProjectSection(WebsiteProperties) = preProject
+		SccProjectName = "SAK"
+		SccAuxPath = "SAK"
+		SccLocalPath = "SAK"
+		SccProvider = "SAK"
+		TargetFramework = "2.0"
+		Debug.AspNetCompiler.VirtualPath = "/UserManual"
+		Debug.AspNetCompiler.PhysicalPath = "UserManual\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\UserManual\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/UserManual"
+		Release.AspNetCompiler.PhysicalPath = "UserManual\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\UserManual\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "7228"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://10.5.10.7:8080/tfs/MapExtensions
+		SccLocalPath0 = .
+		SccWebProject1 = true
+		SccProjectUniqueName1 = UserManual
+		SccLocalPath1 = .
+		SccProjectFilePathRelativizedFromConnection1 = UserManual\\
+		SccProjectEnlistmentChoice1 = 2
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B269BBC9-3DAD-4D4B-A1BD-55CBD9B99E6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B269BBC9-3DAD-4D4B-A1BD-55CBD9B99E6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>连接和事务</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+<p>新的数据访问层允许你在一个数据库连接内，执行多个数据库的操作：</p>
+
+<pre class="code">
+<span style="color:blue">using</span>( <span style="color:#2b91af">ConnectionScope </span>scope <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">ConnectionScope</span>() ) {
+
+    <span style="color:green">// 二个操作共享一个连接
+
+    </span><span style="color:#2b91af">CPQuery</span><span style="color:red">.</span>From(DeleteSQL, parameters1)<span style="color:red">.</span>ExecuteNonQuery();
+
+    <span style="color:#2b91af">StoreProcedure</span><span style="color:red">.</span>Create(<span style="color:#a31515">"UpdateProduct"</span>, product)<span style="color:red">.</span>ExecuteNonQuery();
+}
+</pre>
+
+<p><br /><br />
+如果你希望将上面二个操作放在一个事务中执行，可以这样写：
+</p>
+
+<pre class="code">
+<span style="color:blue">using</span>( <span style="color:#2b91af">ConnectionScope </span>scope <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">ConnectionScope</span>(<span style="color:#2b91af">TransactionMode</span><span style="color:red">.</span>Required) ) {
+
+    <span style="color:green">// 二个操作共享一个连接，且在一个事务中执行。
+
+    </span><span style="color:#2b91af">CPQuery</span><span style="color:red">.</span>From(DeleteSQL, parameters1)<span style="color:red">.</span>ExecuteNonQuery();
+
+    <span style="color:#2b91af">StoreProcedure</span><span style="color:red">.</span>Create(<span style="color:#a31515">"UpdateProduct"</span>, product)<span style="color:red">.</span>ExecuteNonQuery();
+
+    <span style="color:green">// 提交事务
+    </span>scope<span style="color:red">.</span>Commit();
+}
+</pre>
+
+
+<p><br /></p>
+
+<p class="warning">
+<b class="redText">一定要将 ConnectionScope 实例用 using 语句块包含起来。</b> 
+</p>
+
+
+
+<p></p><hr /><p></p>
+
+<p class="title">ConnectionScope的嵌套使用</p>
+
+
+<p>由于 .net 的所有代码必须以方法的形式组织在一起，由方法可以嵌套调用，<br />
+因此，ConnectionScope也被设计成支持嵌套使用，<br />
+下面的示例演示了ConnectionScope的嵌套用法及事务提交行为：
+</p>
+
+
+<pre class="code">
+
+<span style="color:green">// ==========================================
+// 首先，我们定义了几个【子操作】
+// ==========================================
+
+//无ConnectionScope作用域
+</span><span style="color:blue">public void </span>NoneConnectionScope()
+{
+    <span style="color:green">//执行一条语句
+    //"INSERT INTO Table1 VALUES(newid())";
+</span>}
+
+<span style="color:green">//创建了一个ConnectionScope作用域，继承上级作用域的事务行为
+</span><span style="color:blue">public void </span>InheritsTransactionMode()
+{
+    <span style="color:blue">using</span>( <span style="color:#2b91af">ConnectionScope </span>scope <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">ConnectionScope</span>() ) {
+        <span style="color:green">//执行一条语句
+        //"INSERT INTO Table1 VALUES(newid())"
+    </span>}
+}
+
+<span style="color:green">//创建了一个ConnectionScope作用域，并要求开启事务，有调用Commit方法。
+</span><span style="color:blue">public void </span>RequireTransactionAndCommit()
+{
+    <span style="color:blue">using</span>( <span style="color:#2b91af">ConnectionScope </span>scope <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">ConnectionScope</span>(<span style="color:#2b91af">TransactionMode</span><span style="color:red">.</span>Required) ) {
+        <span style="color:green">//执行一条语句
+        //"INSERT INTO Table1 VALUES(newid())"
+        </span>scope<span style="color:red">.</span>Commit();
+    }
+}
+
+<span style="color:green">//创建了一个ConnectionScope作用域，并要求开启事务, 【但没有调用Commit方法】
+</span><span style="color:blue">public void </span>RequireTransactionButNotCommit()
+{
+    <span style="color:blue">using</span>( <span style="color:#2b91af">ConnectionScope </span>scope <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">ConnectionScope</span>(<span style="color:#2b91af">TransactionMode</span><span style="color:red">.</span>Required) ) {
+        <span style="color:green">//执行一条语句
+        //"INSERT INTO Table1 VALUES(newid())"
+    </span>}
+}
+
+
+
+<span style="color:green">// ==========================================
+// 开始场景测试
+// ==========================================
+
+//外层启用事务,不提交事务(事务行为决定在最外层)
+</span><span style="color:blue">public void </span>TestRequired1()
+{
+    <span style="color:green">//TransactionMode.Required表示在当前作用域开启事务
+    </span><span style="color:blue">using</span>( <span style="color:#2b91af">ConnectionScope </span>scope <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">ConnectionScope</span>(<span style="color:#2b91af">TransactionMode</span><span style="color:red">.</span>Required) ) {
+        NoneConnectionScope();
+
+        InheritsTransactionMode();
+
+        <span style="color:green">//内层不提交,以外层提交为准
+        </span>RequireTransactionButNotCommit();
+
+        <span style="color:green">//内层提交将被忽略,以外层提交为准.
+        </span>RequireTransactionAndCommit();
+
+        <span style="color:green">//---------------
+        //外层scope未提交.内部函数的写入操作都将被回滚
+        //最终写入了0条记录
+    </span>}
+}
+
+<span style="color:green">//外层启用事务,提交事务(事务行为决定在最外层)
+</span><span style="color:blue">public void </span>TestRequired2()
+{
+    <span style="color:green">//TransactionMode.Required表示在当前作用域开启事务
+    </span><span style="color:blue">using</span>( <span style="color:#2b91af">ConnectionScope </span>scope <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">ConnectionScope</span>(<span style="color:#2b91af">TransactionMode</span><span style="color:red">.</span>Required) ) {
+        NoneConnectionScope();
+        InheritsTransactionMode();
+
+        <span style="color:green">//内层不提交,以外层提交为准
+        </span>RequireTransactionButNotCommit();
+
+        <span style="color:green">//内层提交将被忽略,以外层提交为准.
+        </span>RequireTransactionAndCommit();
+
+        <span style="color:green">//---------------
+        //外层scope提交.四个函数操作被一起提交
+        </span>scope<span style="color:red">.</span>Commit();
+
+        <span style="color:green">//---------------
+        //最终写入了4条记录
+    </span>}
+}
+
+<span style="color:green">//外层不启用事务(事务行为决定在内层)
+</span><span style="color:blue">public void </span>TestNotRequired1()
+{
+    <span style="color:blue">using</span>( <span style="color:#2b91af">ConnectionScope </span>scope <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">ConnectionScope</span>() ) {
+        <span style="color:green">//继承上级作用域事务(上级未开启,不使用事务),执行完毕将会写入一条记录
+        </span>NoneConnectionScope();
+
+        <span style="color:green">//内部开启事务,但内部未提交,执行完毕不写入记录
+        </span>RequireTransactionButNotCommit();
+
+        <span style="color:green">//内部开启事务,且内部提交,执行完毕写入一条记录
+        </span>RequireTransactionAndCommit();
+
+        <span style="color:green">//
+        //继承上级作用域事务(上级未开启,不使用事务),执行完毕将会写入一条记录
+        </span>InheritsTransactionMode();
+
+        <span style="color:green">//---------------
+        //最终写入了3条记录
+    </span>}
+}
+
+</pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+</div>
+</body>
+
+</html>

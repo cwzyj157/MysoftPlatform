@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>项目小平台使用指南</title>
+<link href="_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="_res/js/help.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$.getJSON("FileAjax.ashx?t=" + Math.random(), function(data){
+			$.each(data, function(i,item){
+				var html = "<div style='display:list-item'>";
+				html += "<a href='../__docs/" + encodeURIComponent(item.FileName) + "' style='color:#1f4fa3' target='_blank'>" + item.FileName + "</a>";
+				html += "&nbsp;&nbsp;<span style='color:#666666'>" + item.Size + "</span>";
+				html += "&nbsp;&nbsp;<span style='color:#666666'>" + item.LastModify + "</span>";
+				html += "</div>";
+				$("#pFile").append(html);
+			});
+		});
+	});
+</script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+<p>本文档包含二个部分：</p>
+<p>
+1. 用户手册：按不同的场景演示如何使用项目小平台。<br />
+2. API手册：列出了项目小平台所有API的公共成员的定义说明。<br />
+</p>
+
+<p>相关文档下载：</p>
+<p id="pFile" style="padding-left:30px;">
+</p>
+</div>
+</div>
+</body>
+
+</html>

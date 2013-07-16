@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>基于数据实体的增删改</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+
+<p>新的API允许以对象的方式操作对应的数据库记录。<br />
+增删改的各API签名定义如下：
+</p>
+
+<pre class="code">
+<span style="color:blue;background:white">public abstract class </span><span style="color:#2b91af;background:white">BaseEntity
+</span><span style="color:black;background:white">{
+    </span><span style="color:blue;background:white">public virtual int </span><span style="color:black;background:white">Insert()
+    {
+        </span><span style="color:green;background:white">// 将当前数据实体插入到数据库中
+    </span><span style="color:black;background:white">}
+
+    </span><span style="color:blue;background:white">public virtual int </span><span style="color:black;background:white">Delete()
+    {
+        </span><span style="color:green;background:white">// 根据数据实体中包含的主键值信息
+        // 从数据库中删除数据实体对应的数据记录
+    </span><span style="color:black;background:white">}
+
+    </span><span style="color:blue;background:white">public virtual int </span><span style="color:black;background:white">Delete(</span><span style="color:#2b91af;background:white">ConcurrencyMode </span><span style="color:black;background:white">concurrencyMode)
+    {
+        </span><span style="color:green;background:white">// 根据数据实体中包含的主键值信息和指定的冲突检测方式及对应的属性值
+        // 从数据库中删除数据实体对应的数据记录
+    </span><span style="color:black;background:white">}
+
+    </span><span style="color:blue;background:white">public virtual int </span><span style="color:black;background:white">Update()
+    {
+        </span><span style="color:green;background:white">// 根据数据实体中包含的主键值信息及修改后的属性值
+        // 更新数据实体对应的数据记录
+    </span><span style="color:black;background:white">}
+
+    </span><span style="color:blue;background:white">public virtual int </span><span style="color:black;background:white">Update(</span><span style="color:#2b91af;background:white">BaseEntity </span><span style="color:black;background:white">original, </span><span style="color:#2b91af;background:white">ConcurrencyMode </span><span style="color:black;background:white">concurrencyMode)
+    {
+        </span><span style="color:green;background:white">// 根据数据实体中包含的主键值信息和指定的冲突检测方式及原始参考对象
+        // 更新数据实体对应的数据记录
+    </span><span style="color:black;background:white">}
+}</span>
+</pre>
+
+<p><br />注意：这些方法都定义在数据实体的基类中。
+</p>
+
+
+
+</div>
+</div>
+</body>
+
+</html>

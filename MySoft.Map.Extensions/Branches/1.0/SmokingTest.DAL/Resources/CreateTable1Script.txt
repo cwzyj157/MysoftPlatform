@@ -1,0 +1,34 @@
+﻿CREATE TABLE [dbo].[Table_1](
+	[Row_Id] [int] IDENTITY(1,1) NOT NULL,
+	[Rowguid] [uniqueidentifier] NOT NULL,
+	[StrValue] [nvarchar](50) NOT NULL,
+	[StrValue2] [nvarchar](50) NULL,
+	[IntValue] [int] NOT NULL,
+	[IntValue2] [int] NULL,
+	[Money] [money] NOT NULL,
+	[Money2] [money] NULL,
+	[Time_Stamp] [timestamp] NULL,
+	[SeqGuid] [uniqueidentifier] NOT NULL,
+	[SeqGuid2] [uniqueidentifier] NULL,
+	[StrValue3] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_Table_1_1] PRIMARY KEY CLUSTERED (	[Row_Id] ASC ) 
+) 
+GO
+
+ALTER TABLE [dbo].[Table_1] ADD  CONSTRAINT [DF_Table_1_IntValue]  DEFAULT ((253)) FOR [IntValue]
+GO
+
+ALTER TABLE [dbo].[Table_1] ADD  CONSTRAINT [DF_Table_1_IntValue2]  DEFAULT ((456)) FOR [IntValue2]
+GO
+
+ALTER TABLE [dbo].[Table_1] ADD  CONSTRAINT [DF_Table_1_Money]  DEFAULT ((999999.99)) FOR [Money]
+GO
+
+ALTER TABLE [dbo].[Table_1] ADD  CONSTRAINT [DF_Table_1_aaa]  DEFAULT (newsequentialid()) FOR [SeqGuid]
+GO
+
+ALTER TABLE [dbo].[Table_1] ADD  CONSTRAINT [DF_Table_1_SeqGuid2]  DEFAULT (newsequentialid()) FOR [SeqGuid2]
+GO
+
+ALTER TABLE [dbo].[Table_1] ADD  CONSTRAINT [DF_Table_1_StrValue3]  DEFAULT (N'aa"bbb"aa') FOR [StrValue3]
+GO

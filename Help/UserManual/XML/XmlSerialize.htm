@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>XML API - 在.net中使用XML</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+<p>在.net中，读写XML其实非常简单，方法就是序列化和反序列化，<br />
+不过，<b class="redText">在序列化和反序列化之前，</b>我们需要定义合适的数据类型，<br />
+具体方法请参考以下示例。</p>
+
+
+<p class="title">首先，我们需要根据期望的XML结构定义相关的数据类型：</p>
+
+<pre class="code">
+<span style="color:blue">public class </span><span style="color:#2b91af">Order
+</span>{
+    [<span style="color:#2b91af">XmlAttribute</span>]
+    <span style="color:blue">public int </span>OrderId { <span style="color:blue">get</span>; <span style="color:blue">set</span>; }
+    [<span style="color:#2b91af">XmlAttribute</span>]
+    <span style="color:blue">public int </span>CustomerId { <span style="color:blue">get</span>; <span style="color:blue">set</span>; }
+
+    <span style="color:green">// 下面三个属性将生成 XmlElement
+    </span><span style="color:blue">public </span><span style="color:#2b91af">DateTime </span>Date { <span style="color:blue">get</span>; <span style="color:blue">set</span>; }
+    <span style="color:blue">public decimal </span>SumMoney { <span style="color:blue">get</span>; <span style="color:blue">set</span>; }
+    <span style="color:blue">public string </span>Comment { <span style="color:blue">get</span>; <span style="color:blue">set</span>; }
+
+    <span style="color:green">// 下面是一个列表集合
+    </span>[<span style="color:#2b91af">XmlArrayItem</span>(<span style="color:#a31515">"Detail"</span>)]        
+    <span style="color:blue">public </span><span style="color:#2b91af">List</span><span style="color:red">&lt;</span><span style="color:#2b91af">OrderDetail</span><span style="color:red">&gt; </span>Details { <span style="color:blue">get</span>; <span style="color:blue">set</span>; }
+}
+
+<span style="color:blue">public class </span><span style="color:#2b91af">OrderDetail
+</span>{
+    [<span style="color:#2b91af">XmlAttribute</span>]
+    <span style="color:blue">public int </span>ProductId { <span style="color:blue">get</span>; <span style="color:blue">set</span>; }
+    [<span style="color:#2b91af">XmlAttribute</span>]
+    <span style="color:blue">public int </span>Quantity { <span style="color:blue">get</span>; <span style="color:blue">set</span>; }
+    [<span style="color:#2b91af">XmlText</span>]
+    <span style="color:blue">public string </span>ProductName { <span style="color:blue">get</span>; <span style="color:blue">set</span>; }
+}
+</pre>
+
+
+<p class="title">生成XML的方法：</p>
+
+
+<pre class="code">
+<span style="color:green">// 1. 首先要创建一个数据对象
+</span><span style="color:#2b91af">Order </span>order <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">Order </span>{
+    OrderId <span style="color:red">= </span><span style="color:purple">10000</span>,
+    CustomerId <span style="color:red">= </span><span style="color:purple">12</span>,
+    Date <span style="color:red">= </span><span style="color:#2b91af">DateTime</span><span style="color:red">.</span>Now,
+    SumMoney <span style="color:red">= </span><span style="color:purple">245.3M</span>,
+    Comment <span style="color:red">= </span><span style="color:#a31515">"aaaaaaaaaaa"</span>,
+    Details <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">List</span><span style="color:red">&lt;</span><span style="color:#2b91af">OrderDetail</span><span style="color:red">&gt;</span>{
+        <span style="color:blue">new </span><span style="color:#2b91af">OrderDetail </span>{ ProductId <span style="color:red">= </span><span style="color:purple">1</span>, ProductName <span style="color:red">= </span><span style="color:#a31515">"p1"</span>, Quantity <span style="color:red">= </span><span style="color:purple">1</span>},
+        <span style="color:blue">new </span><span style="color:#2b91af">OrderDetail </span>{ProductId <span style="color:red">= </span><span style="color:purple">2</span>, ProductName <span style="color:red">= </span><span style="color:#a31515">"p2"</span>,  Quantity <span style="color:red">=</span><span style="color:purple">1</span>}
+    }
+};
+
+<span style="color:green">// 2. 用序列化的方法生成XML
+</span><span style="color:blue">string </span>xml <span style="color:red">= </span>order<span style="color:red">.</span>ToXML();
+</pre>
+
+
+<p class="title">生成的XML结果如下</p>
+
+<pre class="code">
+<span style="color:blue">&lt;?</span><span style="color:#a31515">xml </span><span style="color:red">version</span><span style="color:blue">=</span>"<span style="color:blue">1.0</span>" <span style="color:red">encoding</span><span style="color:blue">=</span>"<span style="color:blue">gb2312</span>"<span style="color:blue">?&gt;
+&lt;</span><span style="color:#a31515">Order </span><span style="color:red">OrderId</span><span style="color:blue">=</span>"<span style="color:blue">10000</span>" <span style="color:red">CustomerId</span><span style="color:blue">=</span>"<span style="color:blue">12</span>"<span style="color:blue">&gt;
+    &lt;</span><span style="color:#a31515">Date</span><span style="color:blue">&gt;</span>2013-04-28T15:38:03.2017284+08:00<span style="color:blue">&lt;/</span><span style="color:#a31515">Date</span><span style="color:blue">&gt;
+    &lt;</span><span style="color:#a31515">SumMoney</span><span style="color:blue">&gt;</span>245.3<span style="color:blue">&lt;/</span><span style="color:#a31515">SumMoney</span><span style="color:blue">&gt;
+    &lt;</span><span style="color:#a31515">Comment</span><span style="color:blue">&gt;</span>aaaaaaaaaaa<span style="color:blue">&lt;/</span><span style="color:#a31515">Comment</span><span style="color:blue">&gt;
+    &lt;</span><span style="color:#a31515">Details</span><span style="color:blue">&gt;
+        &lt;</span><span style="color:#a31515">Detail </span><span style="color:red">ProductId</span><span style="color:blue">=</span>"<span style="color:blue">1</span>" <span style="color:red">Quantity</span><span style="color:blue">=</span>"<span style="color:blue">1</span>"<span style="color:blue">&gt;</span>p1<span style="color:blue">&lt;/</span><span style="color:#a31515">Detail</span><span style="color:blue">&gt;
+        &lt;</span><span style="color:#a31515">Detail </span><span style="color:red">ProductId</span><span style="color:blue">=</span>"<span style="color:blue">2</span>" <span style="color:red">Quantity</span><span style="color:blue">=</span>"<span style="color:blue">1</span>"<span style="color:blue">&gt;</span>p2<span style="color:blue">&lt;/</span><span style="color:#a31515">Detail</span><span style="color:blue">&gt;
+    &lt;/</span><span style="color:#a31515">Details</span><span style="color:blue">&gt;
+&lt;/</span><span style="color:#a31515">Order</span><span style="color:blue">&gt;</span>
+</pre>
+
+
+
+
+
+<p class="title">解析XML的方法（从XML中读取数据）</p>
+
+
+<pre class="code">
+
+<span style="color:green">// 从XML读取数据并生成对象，只需要下面一行代码，
+</span><span style="color:#2b91af">Order </span>order2 <span style="color:red">= </span>xml<span style="color:red">.</span>FromXML<span style="color:red">&lt;</span><span style="color:#2b91af">Order</span><span style="color:red">&gt;</span>();
+
+</pre>
+
+
+</div>
+</div>
+</body>
+
+</html>

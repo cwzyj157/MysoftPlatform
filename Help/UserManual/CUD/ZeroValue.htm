@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>值类型与零值问题</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+
+<p>
+由于数据实体类型在定义时，为了保持代码的简洁性，并没有引入状态追踪机制。<br />
+当数据实体在执行增删改操作时，采用了（与空）对象比较的方法来判断最后修改了哪些属性，<br />
+举例来说：
+</p>
+
+<pre class="code">
+<span style="color:#2b91af;background:white">CbProductCbFtRule </span><span style="color:black;background:white">rule </span><span style="color:red;background:white">= </span><span style="color:blue;background:white">new </span><span style="color:#2b91af;background:white">CbProductCbFtRule</span><span style="color:black;background:white">();
+rule</span><span style="color:red;background:white">.</span><span style="color:black;background:white">FtAmount </span><span style="color:red;background:white">= </span><span style="color:purple;background:white">123.45M</span><span style="color:black;background:white">;
+rule</span><span style="color:red;background:white">.</span><span style="color:black;background:white">FtRate </span><span style="color:red;background:white">= </span><span style="color:purple;background:white">0.2M</span><span style="color:black;background:white">;</span>
+</pre>
+
+<p>CbProductCbFtRule有7个属性，那我们又是如何知道rule实例到底修改了哪些属性呢？
+</p>
+
+<p>我们是这样实现的：我们会为每个数据实体类型创建一个空的比较对象：
+</p>
+<pre class="code">
+<span style="color:blue;background:white">private static readonly </span><span style="color:#2b91af;background:white">CbProductCbFtRule </span><span style="color:black;background:white">s_Empty </span><span style="color:red;background:white">= </span><span style="color:blue;background:white">new </span><span style="color:#2b91af;background:white">CbProductCbFtRule</span><span style="color:black;background:white">();</span>
+</pre>
+
+<p>然后让rule实例的每个属性与s_Empty实例的每个属性相比，当属性值不一样时，我们就知道哪些属性发生了修改，<br />
+因此，可以知道rule实例有二个属性值发生了修改，最终为这二个属性值生成Set子句。
+</p>
+
+<p>不过这里有个问题：当值类型属性设置为【零值】时，<br />
+例如：假如我希望再将FtRate字段修改为 0，如果我这样写：
+</p>
+
+<pre class="code">
+<span style="color:#2b91af;background:white">CbProductCbFtRule </span><span style="color:black;background:white">rule2 </span><span style="color:red;background:white">= </span><span style="color:blue;background:white">new </span><span style="color:#2b91af;background:white">CbProductCbFtRule</span><span style="color:black;background:white">();
+rule2</span><span style="color:red;background:white">.</span><span style="color:black;background:white">ProductCbFtRuleGUID </span><span style="color:red;background:white">= </span><span style="color:black;background:white">productCbFtRuleGUID;
+
+rule2</span><span style="color:red;background:white">.</span><span style="color:black;background:white">FtRate </span><span style="color:red;background:white">= </span><span style="color:purple;background:white">0M</span><span style="color:black;background:white">;    </span><span style="color:green;background:white">// 设置为零
+</span><span style="color:black;background:white">rule2</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Update();
+</span>
+</pre>
+
+<p>此时，当rule2与s_Empty比较时，并不会认为FtRate属性值发生了修改，因为 0 是FtRate属性的默认值（它是值类型）<br />
+也就是说：<b class="redText">rule2.FtRate = 0M; 这行代码是无意义的</b>，因为修改前，FtRate的值就是 0 ，<br />
+类似的问题还有：将布尔值设置为 false，等等。
+</p>
+
+<p>那么如何表达：强制设置属性对应字段值为零值呢？<br />
+可以使用下面的方法：
+</p>
+<pre class="code">
+<span style="color:black;background:white">rule2</span><span style="color:red;background:white">.</span><span style="color:black;background:white">SetPropertyDefaultValue(</span><span style="color:#a31515;background:white">"FtRate"</span><span style="color:black;background:white">);</span>
+</pre>
+
+<p>SetPropertyDefaultValue方法的签名如下：
+</p>
+
+<pre class="code">
+<span style="color:gray;background:white">/// &lt;summary&gt;
+/// </span><span style="color:green;background:white">将指定的【值类型】属性对应的字段值设置为零值。
+</span><span style="color:gray;background:white">/// &lt;/summary&gt;
+/// &lt;remarks&gt;</span><span style="color:green;background:white">说明：属性的零值由 .net framework来定义，数字类型为 0，布尔类型为 false，等等。
+</span><span style="color:gray;background:white">/// &lt;/remarks&gt;
+/// &lt;exception cref="ArgumentNullException"&gt;</span><span style="color:green;background:white">属性名为空</span><span style="color:gray;background:white">&lt;/exception&gt;
+/// &lt;exception cref="ArgumentOutOfRangeException"&gt;</span><span style="color:green;background:white">属性名不能匹配任何属性</span><span style="color:gray;background:white">&lt;/exception&gt;
+/// &lt;exception cref="InvalidOperationException"&gt;</span><span style="color:green;background:white">指定的属性是一个引用类型</span><span style="color:gray;background:white">&lt;/exception&gt;
+/// &lt;exception cref="InvalidOperationException"&gt;</span><span style="color:green;background:white">指定的属性是一个可空类型</span><span style="color:gray;background:white">&lt;/exception&gt;
+/// &lt;param name="propertyName"&gt;</span><span style="color:green;background:white">属性名</span><span style="color:gray;background:white">&lt;/param&gt;
+</span><span style="color:blue;background:white">public void </span><span style="color:black;background:white">SetPropertyDefaultValue(</span><span style="color:blue;background:white">string </span><span style="color:black;background:white">propertyName)</span>
+</pre>
+
+
+
+
+
+
+
+</div>
+</div>
+</body>
+
+</html>

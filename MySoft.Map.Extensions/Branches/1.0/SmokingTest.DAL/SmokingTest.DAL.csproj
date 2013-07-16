@@ -1,0 +1,203 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{38508962-F3A4-435D-8579-3DBB011BCE18}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SmokingTest.DAL</RootNamespace>
+    <AssemblyName>SmokingTest.DAL</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <PublishUrl>http://localhost/SmokingTest.DAL/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>bin\TestResult.Comment.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\TestCodeDom\CodeUtil.cs">
+      <Link>CodeUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\TestCodeDom\TestToListCode.cs">
+      <Link>TestToListCode.cs</Link>
+    </Compile>
+    <Compile Include="AsmInit.cs" />
+    <Compile Include="_0_NUnitInitConnection.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SqlHelper.cs" />
+    <Compile Include="TestAncillaryDeleteCode.cs" />
+    <Compile Include="TestAncillaryUpdateCode.cs" />
+    <Compile Include="TestBulkCopy.cs" />
+    <Compile Include="TestCodeDom.cs" />
+    <Compile Include="TestConcurrencyExceptionCode.cs" />
+    <Compile Include="TestConcurrencytDeleteCode.cs" />
+    <Compile Include="TestConcurrencyUpdateCode.cs" />
+    <Compile Include="TestCUD2.cs" />
+    <Compile Include="TestCUDValueTypeZeroCode.cs" />
+    <Compile Include="TestDeleteCode.cs" />
+    <Compile Include="TestEntityAttribute.cs" />
+    <Compile Include="TestBase.cs" />
+    <Compile Include="TestEntity.cs" />
+    <Compile Include="TestEvent.cs" />
+    <Compile Include="TestExecCPQuery.cs" />
+    <Compile Include="TestExecSP.cs" />
+    <Compile Include="TestForceClose.cs" />
+    <Compile Include="TestInsertCode.cs" />
+    <Compile Include="TestNotNullDataType.cs" />
+    <Compile Include="TestPackage.cs" />
+    <Compile Include="TestPKCode.cs" />
+    <Compile Include="TestSaveXml.cs" />
+    <Compile Include="TestSerialize.cs" />
+    <Compile Include="TestSPOutCode.cs" />
+    <Compile Include="TestSqlSpliceCode.cs" />
+    <Compile Include="TestSqlTraceCode.cs" />
+    <Compile Include="TestTableTrace.cs" />
+    <Compile Include="TestTimeStampCode.cs" />
+    <Compile Include="TestTransaction.cs" />
+    <Compile Include="TestUpdateCode.cs" />
+    <Compile Include="TestWorkflow.cs" />
+    <Compile Include="TestCUD.cs" />
+    <Compile Include="TestXmlToEntity.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Extensions\Mysoft.Map.Extensions.csproj">
+      <Project>{1F60DE50-8BE9-4675-8CDA-EE3DB5CC6C8B}</Project>
+      <Name>Mysoft.Map.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmokingTest.CS.Module\SmokingTest.CS.Entity.csproj">
+      <Project>{3019437D-6026-4DE7-8E7F-D7EA993E3576}</Project>
+      <Name>SmokingTest.CS.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmokingTest.VB.Module\SmokingTest.VB.Entity.vbproj">
+      <Project>{16991C62-8C17-473B-9B9B-0D2F53B44CB5}</Project>
+      <Name>SmokingTest.VB.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmokingTestLibrary\SmokingTestLibrary.csproj">
+      <Project>{0784CD12-2148-45D6-A31C-AA4C6D802A57}</Project>
+      <Name>SmokingTestLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\CreateTable1Script.txt" />
+    <Content Include="Demo1_HTML.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Mysoft.Map.AdditionalAPI.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\TestSPOutScript.txt" />
+    <None Include="Resources\TestTimeStampScript.txt" />
+    <None Include="Resources\TestSqlSpliceScript.txt" />
+    <None Include="Resources\TestAncillaryDeleteScript.txt" />
+    <None Include="Resources\TestAncillaryUpdateScript.txt" />
+    <None Include="Resources\TestCUDValueTypeZeroScript.txt" />
+    <None Include="Resources\TestDeletecript.txt" />
+    <None Include="Resources\TestPKScript.txt" />
+    <None Include="Resources\TestConcurrencyExceptionScript.txt" />
+    <None Include="Resources\TestUpdateScript.txt" />
+    <None Include="Resources\TestConcurrencytDeleteScript.txt" />
+    <None Include="Resources\TestInsertScript.txt" />
+    <None Include="Resources\TestConcurrencyUpdateScript.txt" />
+    <None Include="Resources\TestNotNullDataTypeScript.txt" />
+    <None Include="Resources\TestSqlTraceScript.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

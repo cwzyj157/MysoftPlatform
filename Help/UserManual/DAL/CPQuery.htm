@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>执行参数化SQL</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+<p>我们可以用下面的方法执行一条参数化的SQL语句：</p>
+
+<pre class="code">
+<span style="color:green">// 一条参数化的SQL语句
+</span><span style="color:blue">string </span>parameterizedSQL <span style="color:red">= </span><span style="color:#a31515">@"update Products set ProductName = @ProductName, Quantity = @Quantity
+                where ProductID = @ProductID;"</span>;
+
+<span style="color:green">// 为参数化的SQL准备命令参数
+// 注意：匿名对象的属性名与参数化SQL中的命令名称一致。
+</span><span style="color:blue">var </span>parameters <span style="color:red">= </span><span style="color:blue">new </span>{ ProductName <span style="color:red">= </span><span style="color:#a31515">"新产品1"</span>, Quantity <span style="color:red">= </span><span style="color:purple">222</span>, ProductID <span style="color:red">=</span><span style="color:purple">1 </span>};
+
+
+<span style="color:green">// 执行参数化的SQL语句
+</span><span style="color:#2b91af">CPQuery</span><span style="color:red">.</span>From(parameterizedSQL, parameters)<span style="color:red">.</span>ExecuteNonQuery();
+</pre>
+
+
+<p>代码很简单，注释也解释了每行代码，这里不再多说。
+</p>
+
+
+<p class="warning">
+<b class="redText">警告：参数值的类型一定要与相关的字段类型匹配，CPQuery不负责类型转换。</b> 
+</p>
+
+
+
+
+<p></p><hr /><p></p>
+
+<p class="title">CPQuery的可用方法</p>
+
+<p>与<a href="../../html/T_Mysoft_Map_Extensions_DAL_StoreProcedure.htm">StoreProcedure</a>一样，
+<a href="../../html/T_Mysoft_Map_Extensions_DAL_CPQuery.htm">CPQuery</a>也提供了其它的数据访问操作：
+</p>
+
+
+<p><img src="../_res/Images/dal/CPQuery-1.png" />
+</p>
+
+
+
+
+
+<p></p><hr /><p></p>
+
+
+<p class="title">手工为CPQuery指定参数对象</p>
+
+
+<p>绝大多时候，我们在执行参数化SQL时，只需要提供一个匿名对象（数据实体对象也可以）给CPQuery，<br />
+但我们还提供了更原始的方式，让你指定一个SqlParameter对象数组来满足未知情况。
+</p>
+
+
+<pre class="code">
+<span style="color:green">// 虽然新的数据访问层可以根据匿名对象生成必要的命令参数，
+// 但是，某些特殊的命令参数属性是不支持的。
+// 例如：ReturnValue类型的参数就不支持，由于这类特殊类型不常使用，
+// 所以，我们就没有支持。
+// 因此，当发现新的数据访问层不支持的时候，就需要手工指定这些参数了。
+
+</span><span style="color:#2b91af">SqlParameter</span>[] parameters <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">SqlParameter</span>[<span style="color:purple">2</span>];
+
+parameters[<span style="color:purple">0</span>] <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">SqlParameter</span>(<span style="color:#a31515">"@ProductName"</span>, <span style="color:#2b91af">SqlDbType</span><span style="color:red">.</span>NVarChar, <span style="color:purple">50</span>);
+parameters[<span style="color:purple">0</span>]<span style="color:red">.</span>Value <span style="color:red">= </span><span style="color:#a31515">"新产品1"</span>;
+
+parameters[<span style="color:purple">1</span>] <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">SqlParameter</span>(<span style="color:#a31515">"@Quantity"</span>, <span style="color:#2b91af">SqlDbType</span><span style="color:red">.</span>Int);
+parameters[<span style="color:purple">1</span>]<span style="color:red">.</span>Value <span style="color:red">= </span><span style="color:purple">222</span>;
+
+<span style="color:#2b91af">CPQuery</span><span style="color:red">.</span>From(<span style="color:#a31515">@"update Products set ProductName = @ProductName, Quantity = @Quantity
+                where ProductID = @ProductID;"</span>, 
+            parameters)<span style="color:red">.</span>ExecuteNonQuery();
+</pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>XML API - 在JavaScript中使用XML序列化</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+<p>以前，我们需要使用下面的方法来得到一段XML：</p>
+
+
+<pre class="code">
+<span style="color:green;background:white">//原ERP系统内存在大量的XML字符串拼接问题,XML转义字符也没有处理
+</span><span style="color:blue;background:white">var </span><span style="color:black;background:white">arrUserXml </span><span style="color:red;background:white">= []
+</span><span style="color:black;background:white">arrUserXml</span><span style="color:red;background:white">.</span><span style="color:black;background:white">push</span><span style="color:red;background:white">(</span><span style="color:#a31515;background:white">"&lt;cb_sjkProductIndex keyname='ProductIndexGUID' keyvalue='" 
+    </span><span style="color:red;background:white">+ </span><span style="color:black;background:white">appForm</span><span style="color:red;background:white">.</span><span style="color:black;background:white">appForm_ProductIndexGUID</span><span style="color:red;background:white">.</span><span style="color:black;background:white">value </span><span style="color:red;background:white">+ </span><span style="color:#a31515;background:white">"' oid='" 
+    </span><span style="color:red;background:white">+ </span><span style="color:black;background:white">appForm</span><span style="color:red;background:white">.</span><span style="color:black;background:white">appForm_ProductIndexGUID</span><span style="color:red;background:white">.</span><span style="color:black;background:white">value </span><span style="color:red;background:white">+ </span><span style="color:#a31515;background:white">"'&gt;"</span><span style="color:red;background:white">);
+        
+</span><span style="color:black;background:white">arrUserXml</span><span style="color:red;background:white">.</span><span style="color:black;background:white">push</span><span style="color:red;background:white">(</span><span style="color:#a31515;background:white">"&lt;RefGUID&gt;" </span><span style="color:red;background:white">+ </span><span style="color:black;background:white">appForm</span><span style="color:red;background:white">.</span><span style="color:black;background:white">RefGUID</span><span style="color:red;background:white">.</span><span style="color:black;background:white">value </span><span style="color:red;background:white">+ </span><span style="color:#a31515;background:white">"&lt;/RefGUID&gt; "</span><span style="color:red;background:white">);
+</span><span style="color:black;background:white">arrUserXml</span><span style="color:red;background:white">.</span><span style="color:black;background:white">push</span><span style="color:red;background:white">(</span><span style="color:#a31515;background:white">"&lt;ProductGUID&gt;" </span><span style="color:red;background:white">+ </span><span style="color:black;background:white">appForm</span><span style="color:red;background:white">.</span><span style="color:black;background:white">ProductGUID</span><span style="color:red;background:white">.</span><span style="color:black;background:white">value </span><span style="color:red;background:white">+ </span><span style="color:#a31515;background:white">"&lt;/ProductGUID&gt; "</span><span style="color:red;background:white">);
+</span><span style="color:black;background:white">arrUserXml</span><span style="color:red;background:white">.</span><span style="color:black;background:white">push</span><span style="color:red;background:white">(</span><span style="color:#a31515;background:white">"&lt;ProductName&gt;" </span><span style="color:red;background:white">+ </span><span style="color:black;background:white">appForm</span><span style="color:red;background:white">.</span><span style="color:black;background:white">ProductName</span><span style="color:red;background:white">.</span><span style="color:black;background:white">value </span><span style="color:red;background:white">+ </span><span style="color:#a31515;background:white">"&lt;/ProductName&gt; "</span><span style="color:red;background:white">);
+</span><span style="color:green;background:white">//...表字段越多,拼接越多
+</span><span style="color:black;background:white">arrUserXml</span><span style="color:red;background:white">.</span><span style="color:black;background:white">push</span><span style="color:red;background:white">(</span><span style="color:#a31515;background:white">"&lt;/cb_sjkProductIndex&gt;"</span><span style="color:red;background:white">)</span>
+</pre>
+
+
+<p><br /><br />为了实现同样的功能，在新的API支持下，可以让我们这样做：
+</p>
+
+
+<pre class="code">
+<span style="color:green;background:white">//新API使用js对象来生成XML,无字符串拼接,内部处理XML转义字符
+</span><span style="color:blue;background:white">var </span><span style="color:black;background:white">keyval </span><span style="color:red;background:white">= </span><span style="color:black;background:white">appForm</span><span style="color:red;background:white">.</span><span style="color:black;background:white">appForm_ProductIndexGUID</span><span style="color:red;background:white">.</span><span style="color:black;background:white">value</span><span style="color:red;background:white">;
+
+</span><span style="color:blue;background:white">var </span><span style="color:black;background:white">attr </span><span style="color:red;background:white">= { </span><span style="color:black;background:white">keyname</span><span style="color:red;background:white">: </span><span style="color:#a31515;background:white">"ProductIndexGUID"</span><span style="color:red;background:white">, </span><span style="color:black;background:white">keyvalue</span><span style="color:red;background:white">: </span><span style="color:black;background:white">keyval</span><span style="color:red;background:white">, </span><span style="color:black;background:white">oid</span><span style="color:red;background:white">: </span><span style="color:black;background:white">keyval </span><span style="color:red;background:white">};
+
+</span><span style="color:blue;background:white">var </span><span style="color:black;background:white">data </span><span style="color:red;background:white">= { </span><span style="color:black;background:white">RefGUID</span><span style="color:red;background:white">: </span><span style="color:black;background:white">appForm</span><span style="color:red;background:white">.</span><span style="color:black;background:white">RefGUID</span><span style="color:red;background:white">.</span><span style="color:black;background:white">value</span><span style="color:red;background:white">,
+    </span><span style="color:black;background:white">ProductGUID</span><span style="color:red;background:white">: </span><span style="color:black;background:white">appForm</span><span style="color:red;background:white">.</span><span style="color:black;background:white">ProductGUID</span><span style="color:red;background:white">.</span><span style="color:black;background:white">value</span><span style="color:red;background:white">,
+    </span><span style="color:black;background:white">ProductName</span><span style="color:red;background:white">: </span><span style="color:black;background:white">appForm</span><span style="color:red;background:white">.</span><span style="color:black;background:white">ProductName</span><span style="color:red;background:white">.</span><span style="color:black;background:white">value</span><span style="color:red;background:white">,
+    </span><span style="color:black;background:white">__attr</span><span style="color:red;background:white">: </span><span style="color:black;background:white">attr
+</span><span style="color:red;background:white">};
+
+</span><span style="color:blue;background:white">var </span><span style="color:black;background:white">xml </span><span style="color:red;background:white">= </span><span style="color:black;background:white">MapExt</span><span style="color:red;background:white">.</span><span style="color:black;background:white">toXML</span><span style="color:red;background:white">(</span><span style="color:#a31515;background:white">"cb_sjkProductIndex"</span><span style="color:red;background:white">, </span><span style="color:black;background:white">data</span><span style="color:red;background:white">);</span>
+</pre>
+
+
+
+<p></p><hr /><p></p>
+
+
+<p>MapExt.toXML 方法的签名如下：
+</p>
+
+<pre class="code">
+<span style="color:black;background:white">MapExt</span><span style="color:red;background:white">.</span><span style="color:black;background:white">toXML </span><span style="color:red;background:white">= </span><span style="color:blue;background:white">function</span><span style="color:red;background:white">(</span><span style="color:black;background:white">rootName</span><span style="color:red;background:white">, </span><span style="color:black;background:white">jsObject</span><span style="color:red;background:white">)</span>
+</pre>
+
+<p>rootName:　根节点元素名称。<br />
+jsObject：一个Javascript对象，它的成员将生成XML
+</p>
+
+
+<p><br /><br /><b>说明：</b><br />
+1. jsObject的所有属性，默认生成XML元素（XmlElement），<br />
+2. 可以指定一个 <b class="redText">__attr</b> 属性，它的 所有属性 将生成 XmlAttribute，<br />
+3. 可以指定一个 <b class="redText">__text</b> 属性，它的 属性值 将生成到 InnerText
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+</div>
+</body>
+
+</html>

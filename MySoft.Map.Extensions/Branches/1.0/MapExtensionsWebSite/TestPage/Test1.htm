@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>test</title>
+    <script type="text/javascript" src="../js/Map.Extensions.js"></script>
+	<script type="text/javascript" src="../scripts/jquery-1.4.1.js"></script>
+    <script type="text/javascript">
+    	window.onload = function () {
+    		var v = 0.003;
+    		//alert(3 * v);
+    		var z = 7 * 0.8
+    		//alert(z);
+        }
+
+    	function t1() {
+        	var attr = { keyname: "ContractGUID",
+        		keyvalue: "65D30FF4-76E9-4619-9527-A4559414F1E6"
+        	};
+        	var child = { Field1: "字段一", Field2: "字段二" };
+
+        	var data = { ContractName: "\"合同名称1'<>",
+        		HTAmount: "55567.87",
+        		HTType: "合同类型",
+        		Other: child,
+        		__attr: attr
+        	};
+
+        	var xml = MapExt.toXml("cb_Contract", data);
+
+        	document.getElementById("txtOutput").value = xml;
+        }
+
+        function t2() {
+
+            var array = [];
+            array.push("数组测试");
+            array.push({ StringValue: "TestString", IntValue: 5, DateValue: new Date(), FloatValue: 3 * 0.003, BoolValue: false });
+
+            var xml = MapExt.toXml("CC", array);
+
+            document.getElementById("txtOutput").value = xml;
+        }
+
+        function t3() {
+
+        	var data1 = { ContractName: "\"合同名称1'<>", HTAmount: "55567.87", HTType: "合同类型", __attr: { keyname: "ContractGUID", keyvalue: "65D30FF4-76E9-4619-9527-A4559414F1E6" }};
+        	var xml1 = MapExt.toXml("cb_Contract", data1);
+
+            var data2 = [];
+            data2.push({ HTFKType: "进度款", ApplyName: "第1笔款", FKAmount: "77.6", ContractGUID: "65D30FF4-76E9-4619-9527-A4559414F1E6", __attr: { keyname: "HTFKApplyGUID", keyvalue: "89F6218B-925C-4910-9E60-FEE853B5414B"} });
+            data2.push({ HTFKType: "合同款", ApplyName: "第2笔款", FKAmount: "77.6", ContractGUID: "65D30FF4-76E9-4619-9527-A4559414F1E6", __attr: { keyname: "HTFKApplyGUID", keyvalue: "C245CA2D-6BBA-4DCB-AE24-99B2A9C23FFF"} });
+
+            var xml2 = MapExt.toXml("cb_HTFKApply", data2);
+
+            document.getElementById("txtOutput").value = xml1 + "\r\n" + xml2;
+        }
+
+        function t4() {
+        	var data = { __attr: { type: "Or" }, condition: [
+				{ __attr: { attribute: "p.ParentCode", operator: "eq", datatype: "varchar", value: "testval"} },
+				{ __attr: { attribute: "ProjCode", operator: "eq", datatype: "varchar", value: "aaaa"} }
+			]};
+
+        	var xml = MapExt.toXml("filter", data);
+
+        	document.getElementById("txtOutput").value = xml;
+        }
+
+        function t5() {
+
+        	var data = { filters: { filter: [
+				{ __attr: { attribute: "p.ParentCode", operator: "eq", datatype: "varchar" }, __text: "aabbccdd" },
+				{ __attr: { attribute: "ProjCode", operator: "like", datatype: "varchar" }, __text: "aabbccdd" }
+				]
+        	}, name : "cc"
+        	};
+
+        	var xml = MapExt.toXml("过滤器", data);
+
+        	document.getElementById("txtOutput").value = xml;
+        }
+        function t6() {
+
+        	var data = "{result:'false' errormessage}";
+
+        	var xml = MapExt.parseJSONResult(data);
+
+        	alert(xml.ErrorMessage);
+        }
+
+        function t7() {
+
+        	var data = { __attr: { result: true, keyvalue: "abc"}};
+        	var xml = MapExt.toXml("xml", data);
+        	document.getElementById("txtOutput").value = xml;
+        	var result = MapExt.parseXMLResult(xml);
+        	if (result && result.Result) {
+        		alert(result.KeyValue);
+        	}
+        	else {
+        		alert(result.ErrorMessage);
+        	}
+        }
+
+        function t8() {
+        	var data = '{"DatetimeValue":"\/Date(1366098531463+0800)\/","GuidValue":"cd47a17e-208a-4797-a3a5-feb325574066","StringValue":"sdfsdfsdfdf"}';
+        	var json = MapExt.parseJSON(data);
+        	alert(json.DatetimeValue);
+        }
+
+        function makeAppForm() {
+
+        	var attr = { keyname: "ProductIndexGUID",
+        		keyvalue: "65D30FF4-76E9-4619-9527-A4559414F1E6"
+        	};
+
+        	var data = { RefGUID : "AB2AB4F4-1863-41BF-BF79-F8434257EF36",
+        		ProductGUID : "A2B66BD3-A353-4DFF-A00F-8DD44A8A1B7B",
+        		ProductName: "三室一厅",
+        		__attr: attr
+        	};
+        	var xml = MapExt.toXml("cb_sjkProductIndex", data);
+
+        	document.getElementById("txtOutput").value = xml;
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <input type="button" value="生成转义XML" onclick="t1();"/> 
+        &nbsp;&nbsp;
+		 <input type="button" value="生成appFrom格式xml" onclick="makeAppForm();"/> 
+        &nbsp;&nbsp;
+        <input type="button" value="生成不同类型数据" onclick="t2();"/>
+        &nbsp;&nbsp;
+        <input type="button" value="生成合同主从表" onclick="t3();"/>
+		&nbsp;&nbsp;
+        <input type="button" value="生成filter" onclick="t4();"/>
+		&nbsp;&nbsp;
+        <input type="button" value="生成父子级别" onclick="t5();"/>
+		&nbsp;&nbsp;
+        <input type="button" value="ParseJSONResult" onclick="t6();"/>
+		&nbsp;&nbsp;
+		<input type="button" value="ParseXMLResult" onclick="t7();"/>
+		&nbsp;&nbsp;
+		<input type="button" value="ParseJSON" onclick="t8();"/>
+    </div>
+    <div>
+        <textarea style="width:100%;" rows="50" cols="200" id="txtOutput"></textarea>
+    </div>
+</body>
+</html>

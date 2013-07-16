@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>新的数据访问层 - 用户手册</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+<p>新的数据访问层是为实现以下目标而设计的：</p>
+<p>
+1. 用简单的代码快速调用存储过程。<br />
+2. 支持参数化SQL（解决SQL注入、提供对Unicode类型的支持）。<br />
+3. 支持以拼接的方式编写参数化SQL。<br />
+4. 支持返回数据实体（及列表）的功能。<br />
+5. 对事务和连接对象进行封装，简化调用过程。
+</p>
+
+
+<p>新的数据访问API主要包含三个核心类型：
+</p>
+
+<p><img src="../_res/Images/dal/DAL-API.png" />
+</p>
+
+<p>
+1. StoreProcedure 专门设计用来调用存储过程。<br />
+2. CPQuery 专门用来执行参数化SQL，以及拼接参数化SQL。<br />
+3. ConnectionScope 用来控制连接和事务。<br />
+基本上，<b class="redText">你要记住的就是这三个类型。</b>
+</p>
+
+
+
+
+</div>
+</div>
+</body>
+
+</html>

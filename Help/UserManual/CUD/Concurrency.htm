@@ -1,0 +1,324 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>并发检测</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+	<style type="text/css">
+		.style1 {
+			color: red;
+			font-weight: bold;
+			font-size: large;
+		}
+	</style>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+
+<p>
+在对数据记录执行Delete，Update操作时，有可能会遇到并发问题，<br />
+即：<b>多个界面同时处理某一条记录。</b><br />
+多个界面可能是多个人打开的，也有可能是一个人打开了多次。
+</p>
+
+<p>为了检测并发问题，我们提供了二种检测方法，用于支持开放式并发的解决方案。<br />
+二种检测方法由下面的枚举来指定：
+</p>
+
+<pre class="code">
+<span style="color:gray;background:white">/// &lt;summary&gt;
+/// </span><span style="color:green;background:white">并发检测模式
+</span><span style="color:gray;background:white">/// &lt;/summary&gt;
+</span><span style="color:blue;background:white">public enum </span><span style="color:#2b91af;background:white">ConcurrencyMode
+</span><span style="color:black;background:white">{
+    </span><span style="color:gray;background:white">/// &lt;summary&gt;
+    /// </span><span style="color:green;background:white">根据时间戳字段来检测
+    </span><span style="color:gray;background:white">/// &lt;/summary&gt;
+    </span><span style="color:black;background:white">TimeStamp,
+
+    </span><span style="color:gray;background:white">/// &lt;summary&gt;
+    /// </span><span style="color:green;background:white">根据提供原始值方式来检测
+    </span><span style="color:gray;background:white">/// &lt;/summary&gt;
+    </span><span style="color:black;background:white">OriginalValue
+}</span>
+</pre>
+
+
+<p>支持并发检测的API有以下二个：
+</p>
+
+
+<pre class="code">
+<span style="color:blue;background:white">public abstract class </span><span style="color:#2b91af;background:white">BaseEntity
+</span><span style="color:black;background:white">{
+    </span><span style="color:blue;background:white">public virtual int </span><span style="color:black;background:white">Delete(</span><span style="color:#2b91af;background:white">ConcurrencyMode </span><span style="color:black;background:white">concurrencyMode)
+    {
+        </span><span style="color:green;background:white">// 根据数据实体中包含的主键值信息和指定的冲突检测方式及对应的属性值
+        // 从数据库中删除数据实体对应的数据记录
+    </span><span style="color:black;background:white">}
+
+    </span><span style="color:blue;background:white">public virtual int </span><span style="color:black;background:white">Update(</span><span style="color:#2b91af;background:white">BaseEntity </span><span style="color:black;background:white">original, </span><span style="color:#2b91af;background:white">ConcurrencyMode </span><span style="color:black;background:white">concurrencyMode)
+    {
+        </span><span style="color:green;background:white">// 根据数据实体中包含的主键值信息和指定的冲突检测方式及原始参考对象
+        // 更新数据实体对应的数据记录
+    </span><span style="color:black;background:white">}
+}</span>
+</pre>
+
+
+
+
+<p></p><hr /><p></p>
+<p class="title">二种并发检测的实现原理</p>
+
+
+<p>Delete，Update对数据记录的影响范围是由Where条件来决定的，<br />
+在一般情况下，我们都会在Where条件中指定一个主键去修改指定的记录，例如：
+</p>
+
+<pre class="code">
+<span style="color:blue">update </span><span style="color:teal">Table_1 
+</span><span style="color:blue">set </span><span style="color:teal">StrValue </span><span style="color:gray">= </span><span style="color:red">'aaaaaaa'</span><span style="color:gray">, </span><span style="color:teal">IntValue </span><span style="color:gray">= </span>2
+<span style="color:blue">where </span><span style="color:teal">RowGuid </span><span style="color:gray">= </span><span style="color:teal">@RowGuid </span>
+</pre>
+
+<p><br />在并发模式下，为了检测数据记录已被其他用户更新，就需要指定更复杂的Where条件，例如：
+</p>
+
+<pre class="code">
+<span style="color:green">-- 基于时间戳的检测方法
+</span><span style="color:blue">update </span><span style="color:teal">Table_1 
+</span><span style="color:blue">set </span><span style="color:teal">StrValue </span><span style="color:gray">= </span><span style="color:red">'aaaaaaa'</span><span style="color:gray">, </span><span style="color:teal">IntValue </span><span style="color:gray">= </span>2
+<span style="color:blue">where </span><span style="color:teal">RowGuid </span><span style="color:gray">= </span><span style="color:teal">@RowGuid 
+    </span><span class="style1">and TimeStamp = @TimeStamp</span><span style="color:teal">
+
+</span><span style="color:green">-- 基于原始值的检测方法
+</span><span style="color:blue">update </span><span style="color:teal">Table_2
+</span><span style="color:blue">set </span><span style="color:teal">StrValue </span><span style="color:gray">= </span><span style="color:red">'aaaaaaa'</span><span style="color:gray">, </span><span style="color:teal">IntValue </span><span style="color:gray">= </span>2
+<span style="color:blue">where </span><span style="color:teal">RowGuid </span><span style="color:gray">= </span><span style="color:teal">@RowGuid 
+    </span><span class="style1">and @original_StrValue = 'bbbb' and @original_IntValue = 3</span>
+
+</pre>
+
+<p>不管是哪种方法，原理是一样的：在更新时，要提供额外的参考数据。<br />
+而且这个参考数据应该是用户在编辑前数据记录的初始状态。
+</p>
+
+
+
+
+<p></p><hr /><p></p>
+<p class="title">时间戳的并发检测</p>
+
+<p>这种方法要求数据表有一个时间戳字段。<br />
+时间戳字段字段有一个特点：每当数据记录修改后（不管修改了哪个字段），时间戳字段的值都会发生改变。<br />
+因此我们可以利用这个特性来判断记录在更新前是否被其它用户修改了。
+</p>
+
+
+<p>使用方法：<br />
+1. 界面显示数据时，将时间戳字段也随界面一起发送给客户端，<br />
+2. 当用户发起提交操作时，根据表单数据构建数据实体对象，<br />
+3. 再根据时间戳字段值和主键值构建参考对象（original），<br />
+4. 最后调用Update方法，并指定为TimeStamp模式。
+</p>
+
+<p>在ERP中的具体使用方法请参考<a href="ConcurrencySuggest.htm"><b>《并发场景使用建议》</b></a>。
+</p>
+
+
+
+
+
+
+
+<p></p><hr /><p></p>
+<p class="title">原始值的并发检测</p>
+
+<p>原始值检测方式适合更新局部字段，且允许其他用户修改当前用户不关心的字段。<br />
+在数据库操作时，由Where条件指定要参考的字段（可能一个或者多个字段），<br />
+如果此时数据库的字段值与原始值一致，则表示没有冲突，可以执行修改操作。
+</p>
+
+
+
+<p>使用方法：<br />
+1. 界面显示数据时，将用户需要编辑的字段（界面部分）与参考字段一起发送给客户端，<br />
+2. 当用户发起提交操作时，根据表单数据构建数据实体对象，<br />
+3. 再根据参考字段值和主键值构建参考对象（original），<br />
+4. 最后调用Update方法，并指定为OriginalValue模式。
+</p>
+
+
+<p>在ERP中的具体使用方法请参考<a href="ConcurrencySuggest.htm"><b>《并发场景使用建议》</b></a>。
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p></p><hr /><p></p>
+<p class="title">支持并发检测的Delete</p>
+
+<p>当需要在Delete操作时做并发检测，可以对数据实体对象调用下面的方法：
+</p>
+
+<pre class="code">
+<span style="color:blue;background:white">public virtual int </span><span style="color:black;background:white">Delete(</span><span style="color:#2b91af;background:white">ConcurrencyMode </span><span style="color:black;background:white">concurrencyMode)
+{
+    </span><span style="color:green;background:white">// 根据数据实体中包含的主键值信息和指定的冲突检测方式及对应的属性值
+    // 从数据库中删除数据实体对应的数据记录
+</span><span style="color:black;background:white">}</span>
+</pre>
+
+<p>在调用这个方法前，我们不仅仅要给主键属性赋值，还要给并发检测的参考字段赋值，例如（采用时间戳检测）：
+</p>
+
+<pre class="code">
+<span style="color:#2b91af;background:white">Table1 </span><span style="color:black;background:white">t </span><span style="color:red;background:white">= </span><span style="color:blue;background:white">new </span><span style="color:#2b91af;background:white">Table1</span><span style="color:black;background:white">();
+
+</span><span style="color:green;background:white">// 注意：调用Delete方法前，要给主键字段和时间戳字段赋值。
+</span><span style="color:black;background:white">t</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Rowguid </span><span style="color:red;background:white">= </span><span style="color:black;background:white">oldRowGuid;
+t</span><span style="color:red;background:white">.</span><span style="color:black;background:white">TimeStamp </span><span style="color:red;background:white">= </span><span style="color:black;background:white">oldTimeStamp;
+
+</span><span style="color:green;background:white">// 使用时间戳的并发检测方法执行删除操作。
+</span><span style="color:black;background:white">t</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Delete(</span><span style="color:#2b91af;background:white">ConcurrencyMode</span><span style="color:red;background:white">.</span><span style="color:black;background:white">TimeStamp);</span>
+</pre>
+
+
+
+<p><br />如果还需要参考某个（或者少量）字段，可以参考下面的方法（采用原始值检测）：
+</p>
+
+<pre class="code">
+<span style="color:#2b91af;background:white">Table1 </span><span style="color:black;background:white">t </span><span style="color:red;background:white">= </span><span style="color:blue;background:white">new </span><span style="color:#2b91af;background:white">Table1</span><span style="color:black;background:white">();
+
+</span><span style="color:green;background:white">// 注意：调用Delete方法前，要给主键字段和【参考字段】赋值。
+</span><span style="color:black;background:white">t</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Rowguid </span><span style="color:red;background:white">= </span><span style="color:black;background:white">oldRowGuid;
+t</span><span style="color:red;background:white">.</span><span style="color:black;background:white">RowStatus </span><span style="color:red;background:white">= </span><span style="color:black;background:white">oldRowStatus;
+
+</span><span style="color:green;background:white">// 使用原始值的并发检测方法执行删除操作。
+</span><span style="color:black;background:white">t</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Delete(</span><span style="color:#2b91af;background:white">ConcurrencyMode</span><span style="color:red;background:white">.</span><span style="color:black;background:white">OriginalValue);</span>
+</pre>
+
+
+<p><br /><b class="redText">不管使用哪种并发检测方法，当前数据实体对象中属性值变化的部分将用于生成Where条件。</b>
+</p>
+
+
+
+
+
+
+<p></p><hr /><p></p>
+<p class="title">支持并发检测的Update</p>
+
+<p>当需要在Update操作时做并发检测，可以对数据实体对象调用下面的方法：
+</p>
+<pre class="code">
+<span style="color:blue;background:white">public virtual int </span><span style="color:black;background:white">Update(</span><span style="color:#2b91af;background:white">BaseEntity </span><span style="color:black;background:white">original, </span><span style="color:#2b91af;background:white">ConcurrencyMode </span><span style="color:black;background:white">concurrencyMode)
+{
+    </span><span style="color:green;background:white">// 根据数据实体中包含的主键值信息和指定的冲突检测方式及原始参考对象
+    // 更新数据实体对应的数据记录
+</span><span style="color:black;background:white">}</span>
+</pre>
+
+
+<p>这个方法与不支持并发检测的另一个重载版本相比，多了二个参数：<br />
+1. original：<b class="redText">用于生成Where条件</b>，根据concurrencyMode参数的不同，将会读取original不同的属性。<br />
+2. concurrencyMode：用于指定并发检测方法，用法请参考上面的Delete方法中的示例。
+</p>
+
+
+<p>如果concurrencyMode参数指定为TimeStamp，那么只读取original对象的主键属性与时间戳属性。<br />
+如果concurrencyMode参数指定为OriginalValue，那么将读取original对象的主键属性以及赋值过的属性值。
+</p>
+
+<p>当前调用Update的对象中所有【赋值过的属性】将<b class="redText">用来生成Update语句的Set字段列表</b>。
+</p>
+
+
+<p>示例代码如下：
+</p>
+
+<pre class="code">
+<span style="color:green;background:white">// 先得到当前实体对象。
+</span><span style="color:#2b91af;background:white">Table1 </span><span style="color:black;background:white">current </span><span style="color:red;background:white">= </span><span style="color:#2b91af;background:white">XmlDataEntity</span><span style="color:red;background:white">.</span><span style="color:black;background:white">ConvertXmlToSingle</span><span style="color:red;background:white">&lt;</span><span style="color:#2b91af;background:white">Table1</span><span style="color:red;background:white">&gt;</span><span style="color:black;background:white">(xml);
+
+</span><span style="color:green;background:white">// 创建原始值的比较对象，下面这个对象决定了Where条件将包含对二个字段的判断。
+</span><span style="color:#2b91af;background:white">Table1 </span><span style="color:black;background:white">original </span><span style="color:red;background:white">= </span><span style="color:blue;background:white">new </span><span style="color:#2b91af;background:white">Table1 </span><span style="color:black;background:white">{ Rowguid </span><span style="color:red;background:white">= </span><span style="color:black;background:white">oldRowGuid, RowStatus </span><span style="color:red;background:white">= </span><span style="color:black;background:white">oldRowStatus };
+
+</span><span style="color:green;background:white">// 执行更新操作
+</span><span style="color:black;background:white">current</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Update(original, </span><span style="color:#2b91af;background:white">ConcurrencyMode</span><span style="color:red;background:white">.</span><span style="color:black;background:white">OriginalValue);</span>
+</pre>
+
+
+<p>在ERP中的具体使用方法请参考<a href="ConcurrencySuggest.htm"><b>《并发场景使用建议》</b></a>。
+</p>
+
+
+
+
+
+
+<p></p><hr /><p></p>
+<p class="title">并发检测与异常</p>
+
+
+<p>带有并发检测的Delete，Update方法在执行时，如果发现有并发冲突，就会引发异常，<br />
+它将会导致ConnectionScope限定的整个事务全部回滚，以下示例代码演示了这种用法：
+</p>
+
+<pre class="code">
+<span style="color:blue;background:white">using</span><span style="color:black;background:white">( </span><span style="color:#2b91af;background:white">ConnectionScope </span><span style="color:black;background:white">scope </span><span style="color:red;background:white">= </span><span style="color:blue;background:white">new </span><span style="color:#2b91af;background:white">ConnectionScope</span><span style="color:black;background:white">(<span style="color:#2b91af">TransactionMode</span><span style="color:red">.</span>Required) ) {
+    </span><span style="color:green;background:white">// 第一个提交动作
+    </span><span style="color:black;background:white">obj1</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Update(original, </span><span style="color:#2b91af;background:white">ConcurrencyMode</span><span style="color:red;background:white">.</span><span style="color:black;background:white">TimeStamp);
+
+    </span><span style="color:green;background:white">// 第二个提交动作
+    </span><span style="color:black;background:white">obj2</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Update(original2, </span><span style="color:#2b91af;background:white">ConcurrencyMode</span><span style="color:red;background:white">.</span><span style="color:black;background:white">TimeStamp);
+
+    </span><span style="color:green;background:white">// 第 N 个提交动作、、、、、、、、、、
+
+    // 如果 任何一个提交 发生了 并发冲突，Update方法将会抛出
+    //   Mysoft.Map.Extensions.Exception.OptimisticConcurrencyException
+    //   最终，整个事务块都会回滚，防止产生不完整的数据。
+
+    </span><span style="color:black;background:white">scope</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Commit();
+}</span>
+</pre>
+
+
+<p>注意：示例代码中没有处理异常，异常除了会导致事务回滚，还会继续抛出。
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+</div>
+</body>
+
+</html>

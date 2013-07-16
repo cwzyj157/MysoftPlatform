@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<HelpTOC>
+  <HelpTOCNode Id="0F06BA13-B951-4C27-957C-7FE11D5A76E2" Title="用户手册" Url="UserManual/Home.htm">
+    <HelpTOCNode Id="9077B820-07AD-4855-9A75-18D6CD16644D" Title="数据访问层" Url="UserManual/DAL/Home.htm">
+      <HelpTOCNode Title="初始化新的数据访问层" Url="UserManual/DAL/Init.htm" />
+	  <HelpTOCNode Title="如何调用存储过程" Url="UserManual/DAL/StoreProcedure.htm" />
+	  <HelpTOCNode Title="存储过程的高级调用" Url="UserManual/DAL/StoreProcedure_AdvanCall.htm" />
+	  <HelpTOCNode Title="动态拼接 参数化SQL" Url="UserManual/DAL/CPQuery2.htm" />
+	  <HelpTOCNode Title="连接和事务" Url="UserManual/DAL/ConnectionAndTranscation.htm" />
+	  <HelpTOCNode Title="从数据库中获取数据实体" Url="UserManual/DAL/ReturnEntity.htm" />
+	  <HelpTOCNode Title="数据实体的使用规范" Url="UserManual/DAL/AboutEntity.htm" />
+	  <HelpTOCNode Title="批量操作数据" Url="UserManual/DAL/SqlBulkCopy.htm" />
+	  <HelpTOCNode Title="特性介绍" Url="UserManual/DAL/Features.htm" />
+    </HelpTOCNode>
+	<HelpTOCNode Id="FFEB9C62-DB46-4662-88F6-B726ACAF5849" Title="XML操作" Url="UserManual/XML/Home.htm">
+      <HelpTOCNode Title="在JavaScript中使用XML序列化" Url="UserManual/XML/JavascriptXmlSerialize.htm" />
+	  <HelpTOCNode Title="在.net中使用XML" Url="UserManual/XML/XmlSerialize.htm" />
+	  <HelpTOCNode Title="XML结构与类型定义" Url="UserManual/XML/XmlAndTypeDefine.htm" />
+	  <HelpTOCNode Title="XML使用建议" Url="UserManual/XML/XmlSuggest.htm" />
+	  <HelpTOCNode Title="操作工作流的业务对象" Url="UserManual/XML/SetWorkFlowObject.htm" />
+	  <HelpTOCNode Title="统一的服务端返回值" Url="UserManual/XML/HttpResult.htm" />
+	  <!--<HelpTOCNode Title="XML数据保存" Url="UserManual/XML/SaveXml.htm" />-->
+    </HelpTOCNode>
+	<HelpTOCNode Id="c9b8946b-e303-44c4-a9d8-3c39eb3e4df2" Title="基于数据实体的增删改" Url="UserManual/CUD/Home.htm">
+      <HelpTOCNode Title="前提条件" Url="UserManual/CUD/Precondition.htm" />
+	  <HelpTOCNode Title="Insert" Url="UserManual/CUD/Insert.htm" />
+	  <HelpTOCNode Title="Delete" Url="UserManual/CUD/Delete.htm" />
+	  <HelpTOCNode Title="Update" Url="UserManual/CUD/Update.htm" />
+	  <HelpTOCNode Title="值类型与零值" Url="UserManual/CUD/ZeroValue.htm" />
+	  <HelpTOCNode Title="并发检测" Url="UserManual/CUD/Concurrency.htm" />
+	  <HelpTOCNode Title="并发场景使用建议" Url="UserManual/CUD/ConcurrencySuggest.htm" />
+	  <HelpTOCNode Title="AppForm的数据保存" Url="UserManual/CUD/SaveXml.htm" />
+    </HelpTOCNode>
+  </HelpTOCNode>
+  <HelpTOCNode Id="E577E6AE-9022-4890-8F36-60BCA2EDB583" Title="API手册" Url="UserManual/APIHome.htm">
+    <HelpTOCNode Title="前端API参考" Url="UserManual/JavaScript/MapExt.html" />
+  </HelpTOCNode>
+</HelpTOC>

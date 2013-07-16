@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>统一的服务端返回值</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+
+<p class="title">简单的返回值</p>
+<p>服务端代码：</p>
+
+<pre class="code">
+<span style="color:green;background:white">// 1. 创建一个HttpResult实例
+</span><span style="color:#2b91af;background:white">HttpResult </span><span style="color:black;background:white">result </span><span style="color:red;background:white">= </span><span style="color:blue;background:white">new </span><span style="color:#2b91af;background:white">HttpResult </span><span style="color:black;background:white">{ Result </span><span style="color:red;background:white">= </span><span style="color:blue;background:white">false</span><span style="color:black;background:white">, ErrorMessage </span><span style="color:red;background:white">= </span><span style="color:#a31515;background:white">"错误原因错误原因错误原因" </span><span style="color:black;background:white">};
+
+</span><span style="color:green;background:white">// 2. 得到返回值
+//    XML格式的返回值
+// string xml = result.ToXML();
+
+// 建议采用JSON返回值，可以这样写：
+</span><span style="color:blue;background:white">string </span><span style="color:black;background:white">json </span><span style="color:red;background:white">= </span><span style="color:black;background:white">result</span><span style="color:red;background:white">.</span><span style="color:black;background:white">ToJSON();
+Response</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Write(json);</span>
+</pre>
+
+
+<p>客户端代码：</p>
+
+<pre class="code">
+<span style="color:green;background:white">//新API封装了json-&gt;js对象的转换方式,服务端使用json输出,客户端直接解析
+</span><span style="color:blue;background:white">var </span><span style="color:black;background:white">responseText </span><span style="color:red;background:white">= </span><span style="color:black;background:white">openXMLHTTP</span><span style="color:red;background:white">(</span><span style="color:black;background:white">url</span><span style="color:red;background:white">, </span><span style="color:#a31515;background:white">"a=1&amp;b=2&amp;c=3"</span><span style="color:red;background:white">);
+</span><span style="color:blue;background:white">var </span><span style="color:black;background:white">result </span><span style="color:red;background:white">= </span><span style="color:black;background:white">MapExt</span><span style="color:red;background:white">.</span><span style="color:black;background:white">parseHttpResult</span><span style="color:red;background:white">(</span><span style="color:black;background:white">responseText</span><span style="color:red;background:white">);
+</span><span style="color:blue;background:white">if </span><span style="color:red;background:white">(</span><span style="color:black;background:white">result </span><span style="color:red;background:white">&amp;&amp; </span><span style="color:black;background:white">result</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Result</span><span style="color:red;background:white">) {
+    </span><span style="color:green;background:white">// 处理结果
+</span><span style="color:red;background:white">}
+</span><span style="color:green;background:white">//说明： 前端API不解析XML格式返回值。
+
+</span>
+</pre>
+
+
+<p class="title">包含额外数据的返回值</p>
+<p>服务端代码：</p>
+
+<pre class="code">
+<span style="color:green;background:white">// 1. 创建一个HttpResult实例
+</span><span style="color:#2b91af;background:white">HttpResult</span><span style="color:red;background:white">&lt;</span><span style="color:blue;background:white">string</span><span style="color:red;background:white">&gt; </span><span style="color:black;background:white">result </span><span style="color:red;background:white">= </span><span style="color:blue;background:white">new </span><span style="color:#2b91af;background:white">HttpResult</span><span style="color:red;background:white">&lt;</span><span style="color:blue;background:white">string</span><span style="color:red;background:white">&gt; </span><span style="color:black;background:white">{ Result </span><span style="color:red;background:white">= </span><span style="color:blue;background:white">true </span><span style="color:black;background:white">};
+result</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Data </span><span style="color:red;background:white">= </span><span style="color:#a31515;background:white">"aaaaaaaaaaaaaaaaaa"</span><span style="color:black;background:white">;
+
+</span><span style="color:green;background:white">// 2. 得到返回值
+</span><span style="color:blue;background:white">string </span><span style="color:black;background:white">json </span><span style="color:red;background:white">= </span><span style="color:black;background:white">result</span><span style="color:red;background:white">.</span><span style="color:black;background:white">ToJSON();
+Response</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Write(json);</span>
+</pre>
+
+
+<p>客户端代码：</p>
+
+<pre class="code">
+<span style="color:blue;background:white">var </span><span style="color:black;background:white">responseText </span><span style="color:red;background:white">= </span><span style="color:black;background:white">openXMLHTTP</span><span style="color:red;background:white">(</span><span style="color:black;background:white">url</span><span style="color:red;background:white">, </span><span style="color:#a31515;background:white">"a=1&amp;b=2&amp;c=3"</span><span style="color:red;background:white">);
+</span><span style="color:blue;background:white">var </span><span style="color:black;background:white">result </span><span style="color:red;background:white">= </span><span style="color:black;background:white">MapExt</span><span style="color:red;background:white">.</span><span style="color:black;background:white">parseHttpResult</span><span style="color:red;background:white">(</span><span style="color:black;background:white">responseText</span><span style="color:red;background:white">);
+</span><span style="color:blue;background:white">if </span><span style="color:red;background:white">(</span><span style="color:black;background:white">result </span><span style="color:red;background:white">&amp;&amp; </span><span style="color:black;background:white">result</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Result</span><span style="color:red;background:white">) {
+    </span><span style="color:green;background:white">// 处理结果， 这里可以访问 result.Data 获取从服务端返回的数据
+    </span><span style="color:black;background:white">alert</span><span style="color:red;background:white">(</span><span style="color:black;background:white">result</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Data</span><span style="color:red;background:white">);
+}</span>
+</pre>
+
+
+
+
+
+
+
+</div>
+</div>
+</body>
+
+</html>

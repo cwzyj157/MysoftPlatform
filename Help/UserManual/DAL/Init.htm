@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>初始化新的数据访问层</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+<p>新的数据访问层在使用时，不需要在调用时提供连接字符串，<br />
+因此，就需要有一个初始化的过程为它设置一些默认值。
+</p>
+
+<p class="title">MAP项目初始化</p>
+
+<p>
+为了方便在ERP项目中使用新的数据访问层，只需要在web.config中配置两个httpModule就可以了。
+</p>
+<pre class="code">
+<span style="color:blue;background:white">&lt;!--</span><span style="color:green;background:white">适用于 IIS6 、IIS7（经典模式）的配置</span><span style="color:blue;background:white">--&gt;
+&lt;</span><span style="color:#a31515;background:white">system.web</span><span style="color:blue;background:white">&gt;
+    &lt;</span><span style="color:#a31515;background:white">httpModules</span><span style="color:blue;background:white">&gt;
+        &lt;</span><span style="color:#a31515;background:white">add </span><span style="color:red;background:white">name</span><span style="color:blue;background:white">=</span><span style="color:black;background:white">"</span><span style="color:blue;background:white">MapExtensions</span><span style="color:black;background:white">"
+                </span><span style="color:red;background:white">type</span><span style="color:blue;background:white">=</span><span style="color:black;background:white">"</span><span style="color:blue;background:white">Mysoft.Map.Extensions.InitializerModule, Mysoft.Map.Extensions</span><span style="color:black;background:white">" </span><span style="color:blue;background:white">/&gt;
+    &lt;/</span><span style="color:#a31515;background:white">httpModules</span><span style="color:blue;background:white">&gt;
+&lt;/</span><span style="color:#a31515;background:white">system.web</span><span style="color:blue;background:white">&gt;
+
+&lt;!--</span><span style="color:green;background:white">适用于 IIS7 的配置（集成模式）</span><span style="color:blue;background:white">--&gt;
+&lt;</span><span style="color:#a31515;background:white">system.webServer</span><span style="color:blue;background:white">&gt;
+    &lt;</span><span style="color:#a31515;background:white">validation </span><span style="color:red;background:white">validateIntegratedModeConfiguration</span><span style="color:blue;background:white">=</span><span style="color:black;background:white">"</span><span style="color:blue;background:white">false</span><span style="color:black;background:white">" </span><span style="color:blue;background:white">/&gt;
+    &lt;</span><span style="color:#a31515;background:white">modules</span><span style="color:blue;background:white">&gt;
+        &lt;</span><span style="color:#a31515;background:white">add </span><span style="color:red;background:white">name</span><span style="color:blue;background:white">=</span><span style="color:black;background:white">"</span><span style="color:blue;background:white">MapExtensions</span><span style="color:black;background:white">" </span><span style="color:red;background:white">preCondition</span><span style="color:blue;background:white">=</span><span style="color:black;background:white">"</span><span style="color:blue;background:white">integratedMode</span><span style="color:black;background:white">"
+                </span><span style="color:red;background:white">type</span><span style="color:blue;background:white">=</span><span style="color:black;background:white">"</span><span style="color:blue;background:white">Mysoft.Map.Extensions.InitializerModule, Mysoft.Map.Extensions</span><span style="color:black;background:white">" </span><span style="color:blue;background:white">/&gt;
+    &lt;/</span><span style="color:#a31515;background:white">modules</span><span style="color:blue;background:white">&gt;
+&lt;/</span><span style="color:#a31515;background:white">system.webServer</span><span style="color:blue;background:white">&gt;</span>
+</pre>
+
+<p><br /><br /></p>
+
+<p></p><hr /><p></p>
+
+
+<p class="title">非MAP项目初始化</p>
+
+<p>如果是非MAP项目，可以在【程序初始化的地方】直接调用Initializer.UnSafeInit()，请参考下面的代码：
+</p>
+
+
+<pre class="code">
+<span style="color:blue;background:white">string </span><span style="color:black;background:white">connectionString </span><span style="color:red;background:white">= 
+            </span><span style="color:black;background:white">(</span><span style="color:blue;background:white">from </span><span style="color:black;background:white">s </span><span style="color:blue;background:white">in </span><span style="color:black;background:white">System</span><span style="color:red;background:white">.</span><span style="color:black;background:white">IO</span><span style="color:red;background:white">.</span><span style="color:#2b91af;background:white">File</span><span style="color:red;background:white">.</span><span style="color:black;background:white">ReadAllLines(</span><span style="color:#a31515;background:white">@"c:\SmokingTest.DAL.connectionString.txt"</span><span style="color:black;background:white">)
+            </span><span style="color:blue;background:white">where </span><span style="color:black;background:white">s</span><span style="color:red;background:white">.</span><span style="color:black;background:white">StartsWith(</span><span style="color:#a31515;background:white">";"</span><span style="color:black;background:white">) </span><span style="color:red;background:white">== </span><span style="color:blue;background:white">false
+            select </span><span style="color:black;background:white">s
+            )</span><span style="color:red;background:white">.</span><span style="color:black;background:white">First();
+
+Mysoft</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Map</span><span style="color:red;background:white">.</span><span style="color:black;background:white">Extensions</span><span style="color:red;background:white">.</span><span style="color:#2b91af;background:white">Initializer</span><span style="color:red;background:white">.</span><span style="color:black;background:white">UnSafeInit(connectionString);</span>
+</pre>
+
+
+
+
+</div>
+</div>
+</body>
+
+</html>

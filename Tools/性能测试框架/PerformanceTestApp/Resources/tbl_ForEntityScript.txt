@@ -1,0 +1,9 @@
+CREATE TABLE [tbl_ForEntity]
+(
+    EntityGuid UNIQUEIDENTIFIER PRIMARY KEY DEFAULT(NEWSEQUENTIALID()) ,
+    GuidValue UNIQUEIDENTIFIER,
+    IntValue int,
+    MoneyValue money,
+    VcharValue varchar(16),
+    DtmValue datetime 
+)

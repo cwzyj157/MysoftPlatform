@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>如何调用存储过程</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+
+<p>假设我们需要调用这个存储过程：</p>
+
+<pre class="code">
+<span style="color:blue">create procedure </span><span style="color:teal">[dbo]</span><span style="color:gray">.</span><span style="color:teal">[UpdateProduct]</span><span style="color:gray">( 
+    </span><span style="color:teal">@ProductName </span><span style="color:blue">nvarchar</span><span style="color:gray">(</span>50<span style="color:gray">), 
+    </span><span style="color:teal">@CategoryID </span><span style="color:blue">int</span><span style="color:gray">, 
+    </span><span style="color:teal">@Unit </span><span style="color:blue">nvarchar</span><span style="color:gray">(</span>10<span style="color:gray">), 
+    </span><span style="color:teal">@UnitPrice </span><span style="color:blue">money</span><span style="color:gray">, 
+    </span><span style="color:teal">@Quantity </span><span style="color:blue">int</span><span style="color:gray">, 
+    </span><span style="color:teal">@Remark </span><span style="color:blue">nvarchar</span><span style="color:gray">(</span><span style="color:magenta">max</span><span style="color:gray">), 
+    </span><span style="color:teal">@ProductID </span><span style="color:blue">int
+</span><span style="color:gray">) 
+</span>
+</pre>
+
+<p>如果使用新的数据访问API，我们可以这样调用它：
+</p>
+
+<pre class="code">
+<span style="color:blue">var </span>product <span style="color:red">= </span><span style="color:blue">new </span>{
+    ProductName <span style="color:red">= </span><span style="color:#a31515">"new name"</span>,
+    CategoryID <span style="color:red">= </span><span style="color:purple">1</span>,
+    Unit <span style="color:red">= </span><span style="color:#a31515">"个"</span>,
+    UnitPrice <span style="color:red">= </span><span style="color:purple">12.36</span>,
+    Quantity <span style="color:red">= </span><span style="color:purple">25</span>,
+    Remark <span style="color:red">= </span><span style="color:#a31515">"备注备注备注备注"</span>,
+    ProductID <span style="color:red">= </span><span style="color:purple">111
+</span>};
+
+<span style="color:#2b91af">StoreProcedure</span><span style="color:red">.</span>Create(<span style="color:#a31515">"UpdateProduct"</span>, product)<span style="color:red">.</span>ExecuteNonQuery();
+</pre>
+
+<p>考虑到没人能清楚地记住每个存储过程的名字以及它所包含的参数名称，<br />
+我们为了提高开发效率，还设计了代码工具，可以帮你生成这样的一个代码片段：
+</p>
+
+<p><img src="../_res/Images/dal/CodeTool_StoreProcedure_Create.png" />
+</p>
+
+<p>现在你只需要把这段代码复制到项目中，为每个参数重新填写参数值就可以了。
+</p>
+
+<p>"<b>xxxxxxxxx</b>"保证你不会忘记它们，因为你不重新指定它们，代码就会编译不通过。
+</p>
+
+
+<p></p><hr /><p></p>
+
+<p class="title">StoreProcedure可用的方法</p>
+
+<p>在前面的示例中，我们调用了ExecuteNonQuery()方法去执行存储过程。<br />
+事实上，我们还为StoreProcedure提供了其它方法，让你可以从存储过程中返回结果。
+</p>
+
+<p><img src="../_res/Images/dal/StoreProcedure_API.png" />
+</p>
+
+
+
+<p></p><hr /><p></p>
+
+<p class="title">创建StoreProcedure对象</p>
+
+<p>那么如何创建一个StoreProcedure对象呢？<br />
+我们提供以下4个方法：
+</p>
+
+<p><img src="../_res/Images/dal/StoreProcedure_API2.png" />
+</p>
+
+
+<p>我们提供二个构造方法以及等效的静态方法（Create），<br />
+构造方法看起来很传统，然而，静态方法可以让代码写起来更流畅。
+</p>
+
+
+
+
+
+
+</div>
+</div>
+</body>
+
+</html>

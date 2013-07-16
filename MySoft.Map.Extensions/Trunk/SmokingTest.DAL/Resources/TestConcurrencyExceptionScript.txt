@@ -1,0 +1,29 @@
+
+
+
+
+CREATE TABLE [dbo].[TestConcurrencyException](
+	[GuiId] [uniqueidentifier] NOT NULL,
+	[TstValue] [timestamp] NULL,
+	[StrValue] [varchar](50) NULL,
+	[IntValue] [int] NULL,
+ CONSTRAINT [PK_TestConcurrencyException] PRIMARY KEY CLUSTERED 
+(
+	[GuiId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+GO
+if exists (select * from sysobjects where id = object_id(N'[GetTestConcurrencyExceptionGuid]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)  
+DROP PROC [dbo].GetTestConcurrencyExceptionGuid
+GO
+CREATE PROC GetTestConcurrencyExceptionGuid(
+	@GuiId uniqueidentifier,
+	@StrValue varchar(50) output
+)
+AS
+DECLARE  @Strv varchar(50)
+SELECT TOP 1 @Strv=StrValue FROM  TestConcurrencyException WHERE GuiId=@GuiId
+SET @StrValue=@Strv
+

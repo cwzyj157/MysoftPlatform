@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>存储过程的高级调用</title>
+<link href="../_res/css/base.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../_res/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../_res/js/help.js"></script>
+</head>
+
+<body>
+<div id="bodyContent">
+<div id="mainContent">
+<p>假设我有这样一个【带有输出参数】的存储过程：</p>
+<pre class="code">
+<span style="color:blue">create procedure </span><span style="color:teal">[dbo]</span><span style="color:gray">.</span><span style="color:teal">[InsertProduct]</span><span style="color:gray">( 
+    </span><span style="color:teal">@ProductName </span><span style="color:blue">nvarchar</span><span style="color:gray">(</span>50<span style="color:gray">), 
+    </span><span style="color:teal">@CategoryID </span><span style="color:blue">int</span><span style="color:gray">, 
+    </span><span style="color:teal">@Unit </span><span style="color:blue">nvarchar</span><span style="color:gray">(</span>10<span style="color:gray">), 
+    </span><span style="color:teal">@UnitPrice </span><span style="color:blue">money</span><span style="color:gray">, 
+    </span><span style="color:teal">@Quantity </span><span style="color:blue">int</span><span style="color:gray">, 
+    </span><span style="color:teal">@Remark </span><span style="color:blue">nvarchar</span><span style="color:gray">(</span><span style="color:magenta">max</span><span style="color:gray">),
+    </span><span style="color:teal">@ProductID </span><span style="color:blue">int output
+</span><span style="color:gray">) 
+</span><span style="color:blue">as
+</span>
+</pre>
+
+
+<p>我们可以用下面的代码来调用它，并获取输出参数值：
+</p>
+<pre class="code">
+<span style="color:blue">var </span>product <span style="color:red">= </span><span style="color:blue">new </span>{
+    ProductName <span style="color:red">= </span><span style="color:#a31515">"new name"</span>,
+    CategoryID <span style="color:red">= </span><span style="color:purple">1</span>,
+    Unit <span style="color:red">= </span><span style="color:#a31515">"个"</span>,
+    UnitPrice <span style="color:red">= </span><span style="color:purple">12.36</span>,
+    Quantity <span style="color:red">= </span><span style="color:purple">25</span>,
+    Remark <span style="color:red">= </span><span style="color:#a31515">"备注备注备注备注"</span>,
+    ProductID <span style="color:red">= </span>(<span style="color:#2b91af">SPOut</span>)<span style="color:purple">0        </span><span style="color:green">// output
+</span>};
+
+<span style="color:#2b91af">StoreProcedure </span>sp <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">StoreProcedure</span>(<span style="color:#a31515">"InsertProduct"</span>, product);
+sp<span style="color:red">.</span>ExecuteNonQuery();
+
+<span style="color:blue">int </span>newProductId <span style="color:red">= </span>(<span style="color:blue">int</span>)sp<span style="color:red">.</span>Command<span style="color:red">.</span>Parameters[<span style="color:#a31515">"@ProductID"</span>]<span style="color:red">.</span>Value;
+</pre>
+
+<p>注意哦，不要【抄】上面的代码。<br />
+此时代码工具仍然能助你一臂之力：
+</p>
+<p><img src="../_res/Images/dal/CodeTool_StoreProcedure_Create2.png" />
+</p>
+
+
+
+<p></p><hr /><p></p>
+
+<p class="title">手工为StoreProcedure指定参数对象</p>
+
+
+<p>说明：对于存储过程的参数，新的数据访问层已覆盖到我们【常见】的类型以及输出值方向，<br />
+如果遇到特殊情况，比如：你需要ParameterDirection.ReturnValue的参数，<br />
+那么就需要手工创建必要的SqlParameter对象数组，示例代码如下：
+</p>
+
+<pre class="code">
+<span style="color:green">// 虽然新的数据访问层可以根据匿名对象生成必要的命令参数，
+// 但是，某些特殊的命令参数属性是不支持的。
+// 例如：ReturnValue类型的参数就不支持，由于这类特殊类型不常使用，
+// 所以，我们就没有支持。
+// 因此，当发现新的数据访问层不支持的时候，就需要手工指定这些参数了。
+
+</span><span style="color:#2b91af">SqlParameter</span>[] parameters <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">SqlParameter</span>[<span style="color:purple">7</span>];
+
+<span style="color:green">//...准备7个命令参数
+</span>parameters[<span style="color:purple">0</span>] <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">SqlParameter</span>(<span style="color:#a31515">"@ProductName"</span>, <span style="color:#2b91af">SqlDbType</span><span style="color:red">.</span>NVarChar, <span style="color:purple">50</span>);
+parameters[<span style="color:purple">0</span>]<span style="color:red">.</span>Value <span style="color:red">= </span><span style="color:#a31515">"new name"</span>;
+
+<span style="color:green">// 再创建另外5个命令参数。
+
+</span>parameters[<span style="color:purple">6</span>] <span style="color:red">= </span><span style="color:blue">new </span><span style="color:#2b91af">SqlParameter</span>(<span style="color:#a31515">"@ProductID"</span>, <span style="color:#2b91af">SqlDbType</span><span style="color:red">.</span>Int);
+parameters[<span style="color:purple">6</span>]<span style="color:red">.</span>Direction <span style="color:red">= </span><span style="color:#2b91af">ParameterDirection</span><span style="color:red">.</span>Output;
+
+(<span style="color:blue">new </span><span style="color:#2b91af">StoreProcedure</span>(<span style="color:#a31515">"InsertProduct"</span>, parameters))<span style="color:red">.</span>ExecuteNonQuery();
+
+<span style="color:blue">int </span>newProductId <span style="color:red">= </span>(<span style="color:blue">int</span>)parameters[<span style="color:purple">6</span>]<span style="color:red">.</span>Value;
+</pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="gb2312" ?>
+<BusinessType businessAssembly="Mysoft.ErpDemo.Business" businessClassName="DemoSP">
+	<SQL>
+		SELECT
+		&apos;Code1&apos;  AS [合同编码],
+		&apos;合同名称&apos;  AS [合同名称],
+		GETDATE() AS [签订日期],
+		&apos;abc&apos; AS [经办人],
+		555 AS [IntVal]
+	</SQL>
+	<Item>
+		<Domain name="合同编码" isupdate="0" isnull="1" type="varchar" len="100"  displaytype="text" dropdownoptions="" default=""/>
+		<Domain name="合同名称" isupdate="0" isnull="1" type="varchar" len="100"  displaytype="text" dropdownoptions="" default=""/>
+		<Domain name="合同类别" isupdate="0"  isnull="1" type="varchar" len="100"  displaytype="text" dropdownoptions="" default=""/>
+		<Domain name="招标方式" isupdate="0"  isnull="1" type="varchar" len="100"  displaytype="text" dropdownoptions="" default=""/>
+		<Domain name="经办人" isupdate="0"  isnull="1" type="varchar" len="100"  displaytype="text" dropdownoptions="" default=""/>
+		<Domain name="合同金额" isupdate="0"  isnull="1" type="money" len="100"  displaytype="number" dropdownoptions="" default=""/>
+		<Domain name="签订日期" isupdate="0"  isnull="1" type="datetime" len="100"  displaytype="text" dropdownoptions="" default=""/>
+		<Domain name="IntVal" isupdate="0"  isnull="1" type="int" len="128"  displaytype="text" dropdownoptions="1|2" default="defaultVal" isapprovemodify="0">138</Domain>
+		<Domain name="合约规划使用明细列表比较域" isupdate="0"  isnull="1" type="varchar" len="100"  displaytype="text" dropdownoptions="" default=""/>
+		<Group name="合约规划使用明细">
+			<SQL>
+				SELECT
+				&apos;拆分来源&apos;  AS [拆分来源],
+				&apos;拆分类型&apos;  AS [拆分类型],
+				GETDATE() AS [科目编码],
+				CAST(55.5 AS MONEY) AS [拆分金额]
+			</SQL>
+			<Item>
+				<Domain name="拆分来源" isupdate="0" isnull="1" type="varchar" len="100"  displaytype="text" dropdownoptions="" default=""/>
+				<Domain name="拆分类型" isupdate="0" isnull="1" type="varchar" len="100"  displaytype="text" dropdownoptions="" default=""/>
+				<Domain name="科目编码" isupdate="0"  isnull="1" type="varchar" len="100"  displaytype="text" dropdownoptions="" default=""/>
+				<Domain name="拆分金额" isupdate="0"  isnull="1" type="money" len="100"  displaytype="text" dropdownoptions="" default=""/>
+			</Item>
+		</Group>
+		<Group name="TestGroup">
+			<Item>
+				<Domain name="Item1" isupdate="0" isnull="1" type="varchar" len="100"  displaytype="text" dropdownoptions="" default=""/>
+				<Domain name="Item2" isupdate="0" isnull="1" type="varchar" len="100"  displaytype="text" dropdownoptions="" default=""/>
+				<Domain name="Item3" isupdate="0"  isnull="1" type="varchar" len="100"  displaytype="text" dropdownoptions="" default=""/>
+				<Domain name="Item4" isupdate="0"  isnull="1" type="money" len="100"  displaytype="text" dropdownoptions="" default=""/>
+			</Item>
+		</Group>
+	</Item>
+</BusinessType>
