@@ -1,0 +1,70 @@
+﻿<%@ Master Language="C#" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title><%= AppInfo.RunOptions.AppName + " - " + this.Page.Title %></title>
+    <link type="text/css" rel="Stylesheet" href="/js/easyui/themes/metro/easyui.css" />
+    <link type="text/css" rel="Stylesheet" href="/js/easyui/themes/icon.css" />
+    <%= UiHelper.RefCssFileHtml("/css/StyleSheet.css") %>
+</head>
+<body class="easyui-layout">
+
+
+<div region="north" id="topBanner" >
+	<div id="labAjaxMessage">正在处理中，请稍后…………</div>
+	<div id="webSiteLogo">
+		<a href="Default.aspx" title="回到网站首页"><img src="/Images/Logo.png" alt="" /></a></div>
+	<div id="currentPageTitle">
+		<span><%= this.Page.Title %></span></div>
+	<div id="topRightBar">
+		当前操作人：<b><%= UserManager.GetCurrentUserFullName()%></b>
+		<a href="javascript:window.location = window.location;" title="刷新本页面" class="easyui-linkbutton" plain="true">
+			<img src="/Images/refresh.gif" alt="refresh" /></a>
+	</div>
+	
+	<div id='mainMenuBar'>
+		<a href='javascript:void(0)' id='mb1' class='easyui-menubutton' menu='#mm1' iconCls='icon-edit'>基础数据</a>
+		<a href='javascript:void(0)' id='mb2' class='easyui-menubutton' menu='#mm2' iconCls='icon-search'>数据分析</a>
+	</div>
+	<div id='mm1' style='width:180px;'>
+		<div><a href='ActiveTask.aspx'>活动任务表</a></div>
+		<div class='menu-sep'></div>
+		<div><a href='QueryTask.aspx'>任务记录查询</a></div>
+	</div>
+	
+	<div id='mm2' style='width:180px;'>
+		<div><a href='ResourceStatus.aspx'>资源状况表</a></div>
+	</div>
+
+</div>
+
+<div region="center" id="contentBody" style="overflow: hidden">
+<asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+</asp:ContentPlaceHolder>
+
+</div>
+
+
+
+<script type="text/javascript" src="/js/jquery.min_2.0.js"></script>
+<script type="text/javascript" src="/js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/js/easyui/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/js/jquery.form_3.37.js"></script>
+
+<%= UiHelper.RefJsFileHtml("/js/public.js")%>
+<%= UiHelper.RefJsFileHtml("/js/dialog.js")%>
+
+<script type="text/javascript">
+	var g__isAdmin = <%= UserManager.CheckCurrentUserRole(UserRole.Admin).ToString().ToLower() %>;
+	var g__isPM = <%= UserManager.CheckCurrentUserRole(UserRole.PM).ToString().ToLower() %>;
+	var g__isDeveloper = <%= UserManager.CheckCurrentUserRole(UserRole.Developer).ToString().ToLower() %>;
+	var g__isTester = <%= UserManager.CheckCurrentUserRole(UserRole.Tester).ToString().ToLower() %>;
+</script>
+
+<asp:ContentPlaceHolder id="script" runat="server">
+</asp:ContentPlaceHolder>
+
+</body>
+</html>

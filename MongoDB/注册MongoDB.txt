@@ -1,0 +1,5 @@
+mongod --dbpath "E:\SQLDataFiles\Mongo\Data" --logpath "E:\SQLDataFiles\Mongo\Log\mongodb.log" --reinstall --serviceName "MongoDB"
+
+mongod --remove --serviceName "MongoDB"
+
+sc delete mongodb

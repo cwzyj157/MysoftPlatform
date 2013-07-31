@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "WebSite1", "WebSite1", "{3A7D2791-E357-470B-B233-F50A49189E93}"
+	ProjectSection(WebsiteProperties) = preProject
+		SccProjectName = "SAK"
+		SccAuxPath = "SAK"
+		SccLocalPath = "SAK"
+		SccProvider = "SAK"
+		TargetFramework = "3.5"
+		ProjectReferences = "{6F39E130-24D4-4C37-8DDE-58351294BFF3}|TaskManagerLib.dll;"
+		Debug.AspNetCompiler.VirtualPath = "/WebSite1"
+		Debug.AspNetCompiler.PhysicalPath = "WebSite1\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\WebSite1\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/WebSite1"
+		Release.AspNetCompiler.PhysicalPath = "WebSite1\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\WebSite1\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "3804"
+		VWDVirtualPath = "/"
+		DefaultWebSiteLanguage = "Visual C#"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerLib", "TaskManagerLib\TaskManagerLib.csproj", "{6F39E130-24D4-4C37-8DDE-58351294BFF3}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://10.5.10.7:8080/tfs/MapExtensions
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = TaskManagerLib\\TaskManagerLib.csproj
+		SccProjectName1 = TaskManagerLib
+		SccLocalPath1 = TaskManagerLib
+		SccWebProject2 = true
+		SccProjectUniqueName2 = WebSite1
+		SccLocalPath2 = .
+		SccProjectFilePathRelativizedFromConnection2 = WebSite1\\
+		SccProjectEnlistmentChoice2 = 2
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A7D2791-E357-470B-B233-F50A49189E93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A7D2791-E357-470B-B233-F50A49189E93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A7D2791-E357-470B-B233-F50A49189E93}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A7D2791-E357-470B-B233-F50A49189E93}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{6F39E130-24D4-4C37-8DDE-58351294BFF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F39E130-24D4-4C37-8DDE-58351294BFF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F39E130-24D4-4C37-8DDE-58351294BFF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F39E130-24D4-4C37-8DDE-58351294BFF3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
